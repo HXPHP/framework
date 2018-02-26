@@ -1,6 +1,6 @@
 # HXPHP Framework
 
-[![Build Status](https://travis-ci.org/HXPHP/framework.svg?branch=master)](https://travis-ci.org/HXPHP/framework)
+[![Build Status](https://travis-ci.org/hxphp/framework.svg?branch=master)](https://travis-ci.org/hxphp/framework)
 
 O HXPHP é um mini-framework PHP.
 
@@ -14,4 +14,4 @@ Lembre-se também que antes de estudar um framework é mais do que recomendado, 
 
 #### Link para documentação:
 ---------------------------------------------------------------------
-[https://github.com/brunosantoshx/hxphp-docs](https://github.com/brunosantoshx/hxphp-docs).
+[https://github.com/hxphp/docs](https://github.com/hxphp/docs).
