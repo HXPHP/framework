@@ -14,10 +14,16 @@ php:
   - 7.1
   - 7.2
 
+before_script:
+  - if [[ $(phpenv version-name) == '7.1' ]]; then composer require satooshi/php-coveralls '~1.0' -n ; fi
+
 script: 
   - composer install
   - phpunit
 
+after_script:
+  - if [[ $(phpenv version-name) == '7.1' ]]; then php vendor/bin/coveralls -v ; fi
+
 notifications:
   email:
-    - bruno@plug.ag
+    on_success: never
