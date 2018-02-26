@@ -1,7 +1,7 @@
 <?php
 namespace HXPHP\System\Storage\Cookie;
 
-class Cookie implements \HXPHP\System\Storage\StorageInterface
+class Cookie
 {
     /**
      * Cria um cookie
