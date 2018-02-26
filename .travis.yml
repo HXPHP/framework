@@ -8,9 +8,11 @@ php:
   - 7.1
   - 7.2
 
+before_install:
+  - composer require satooshi/php-coveralls:dev-master
+
 script: 
   - composer install
-  - composer require satooshi/php-coveralls '~1.0'
   - vendor/bin/phpunit --coverage-clover clover.xml
 
 after_script:
