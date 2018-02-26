@@ -9,7 +9,7 @@ php:
   - 7.2
 
 before_install:
-  - composer require satooshi/php-coveralls:dev-master
+  - composer require satooshi/php-coveralls '~1.0'
 
 script: 
   - composer install
