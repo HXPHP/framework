@@ -38,8 +38,7 @@
             "Tests\\": "tests/HXPHP"
         }
     },
-    "minimum-stability": "stable",
-    "prefer-stable": true,
+    "minimum-stability": "dev",
     "config": {
         "discard-changes": "stash",
         "optimize-autoloader": true
