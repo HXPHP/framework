@@ -1,8 +1,17 @@
 # HXPHP Framework
 
-[![Build Status](https://travis-ci.org/HXPHP/framework.svg?branch=master)](https://travis-ci.org/HXPHP/framework)
+[![Build Status](https://travis-ci.org/HXPHP/hxphp.svg?branch=master)](https://travis-ci.org/brunosantoshx/hxphp)
+[![Total Downloads](https://poser.pugx.org/hxphp/framework/downloads)](https://packagist.org/packages/hxphp/framework)
+[![Latest Stable Version](https://poser.pugx.org/hxphp/framework/v/stable)](https://packagist.org/packages/hxphp/framework)
+[![Latest Unstable Version](https://poser.pugx.org/hxphp/framework/v/unstable)](https://packagist.org/packages/hxphp/framework)
+[![License](https://poser.pugx.org/hxphp/framework/license)](https://packagist.org/packages/hxphp/framework)
+
+
 
 O HXPHP é um mini-framework PHP.
+
+#### PHP 5.x:
+[https://github.com/hxphp/hxphp-2](https://github.com/hxphp/hxphp-2).
 
 
 ### Qual é a diferença do HXPHP e os demais frameworks PHP?
