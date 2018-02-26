@@ -17,6 +17,7 @@ script:
 
 after_script:
   - php vendor/bin/coveralls -v
+  - cat coveralls-upload.json
 
 notifications:
   email:
