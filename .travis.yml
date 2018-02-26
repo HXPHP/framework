@@ -1,10 +1,4 @@
-sudo: true
-
-services:
-  - mysql
-
-before_install:
-  - mysql -e 'CREATE DATABASE IF NOT EXISTS hxphp;'
+sudo: false
 
 language: php
 
