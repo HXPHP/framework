@@ -34,7 +34,7 @@ class Request extends SymfonyHttpFoundationRequest
     {
         $filters = $this->custom_filters;
 
-        if (!is_array($data)) {
+        if (!is_null($key)) {
             if (array_key_exists($key, $filters)) {
                 $filter = $filters[$key];
 

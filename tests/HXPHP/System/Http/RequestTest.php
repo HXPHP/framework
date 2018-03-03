@@ -90,6 +90,10 @@ final class RequestTest extends BaseTestCase
 			'email_field' => FILTER_VALIDATE_EMAIL,
 			'allowed_html_field' => [
 				'filter' => FILTER_UNSAFE_RAW
+			],
+			'multiple_integer_field' => [
+				'filter' => FILTER_SANITIZE_NUMBER_INT,
+				'flags' => FILTER_FORCE_ARRAY
 			]
 		]);
 
@@ -98,7 +102,7 @@ final class RequestTest extends BaseTestCase
 		$this->assertFalse($request->get('email_field'));
 		$this->assertEquals('<strong>Allowed</strong>', $request->get('allowed_html_field'));
 		$this->assertEmpty($request->get('invalid_html_field'));
-		$this->assertEquals(['value1', 'value2'], $request->get('multiple_integer_field'));
+		$this->assertEquals([1, 2], $request->get('multiple_integer_field'));
 	}	
 
 	public function testGetFunction(): void
