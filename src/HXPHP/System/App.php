@@ -4,6 +4,7 @@ namespace HXPHP\System;
 use HXPHP\System\Configs\Config;
 use HXPHP\System\Http\Request;
 use HXPHP\System\Http\Response;
+use HXPHP\System\Router;
 
 class App
 {
@@ -31,7 +32,8 @@ class App
     public function __construct(Config $configs)
     {
         $this->configs = $configs;
-        $this->request = new Request($configs->baseURI, $configs->global->controllers->directory);
+        $this->request = new Request();
+        $this->router = new Router($configs->baseURI, $configs->global->controllers->directory);
         $this->response = new Response;
     }
 
@@ -64,10 +66,10 @@ class App
         /**
          * Variáveis
          */
-        $subfolder = $this->request->subfolder === 'default' ? '' :
-                $this->request->subfolder . DIRECTORY_SEPARATOR;
-        $controller = $this->request->controller;
-        $action = $this->request->action;
+        $subfolder = $this->router->subfolder === 'default' ? '' :
+                $this->router->subfolder . DIRECTORY_SEPARATOR;
+        $controller = $this->router->controller;
+        $action = $this->router->action;
         $controllersDir = $this->configs->controllers->directory;
         $notFoundController = $this->configs->controllers->notFound;
 
@@ -105,7 +107,7 @@ class App
         /**
          * Atribuição de parâmetros
          */
-        call_user_func_array([&$app, $action], $this->request->params);
+        call_user_func_array([&$app, $action], $this->router->params);
 
         /**
          * Renderização da VIEW

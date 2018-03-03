@@ -1,7 +1,10 @@
 <?php
 namespace HXPHP\System\View;
 
-class View
+use HXPHP\System\Configs\Config;
+use HXPHP\System\Http\Request;
+
+class Core
 {
     /**
      * Título da página
@@ -38,14 +41,14 @@ class View
         'js' => []
     ];
 
-    public function setConfigs(Configs\Config $configs, string $subfolder, string $controller, string $action)
+    public function setConfigs(Config $configs, string $subfolder, string $controller, string $action)
     {
         /**
          * Injeção das Configurações
          * @var object
          */
         $this->configs = $configs;
-        $this->request = new Http\Request($configs->baseURI);
+        $this->request = new Request($configs->baseURI);
 
         /**
          * Subfolder

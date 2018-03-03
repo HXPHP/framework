@@ -1,9 +1,9 @@
 <?php
 namespace HXPHP\System;
 
-use HXPHP\System\View\View;
+use HXPHP\System\View\Core;
 
-class View extends View
+class View extends Core
 {
     
 }

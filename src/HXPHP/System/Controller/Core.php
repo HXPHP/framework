@@ -1,12 +1,12 @@
 <?php
 namespace HXPHP\System\Controller;
 
-use HXPHP\System\{
-    Http,
-    Configs\Config
-};
+use HXPHP\System\Configs\Config;
+use HXPHP\System\Http\Request;
+use HXPHP\System\Http\Response;
+use HXPHP\System\View;
 
-class Controller
+class Core
 {
     /**
      * Injeção das Configurações
@@ -36,7 +36,7 @@ class Controller
     {
         //Injeção da VIEW
         $this->view = new View;
-        $this->response = new Http\Response;
+        $this->response = new Response;
 
         if ($configs)
             $this->setConfigs($configs);
@@ -51,7 +51,7 @@ class Controller
     {
         //Injeção das dependências
         $this->configs = $configs;
-        $this->request = new Http\Request($configs->baseURI, $configs->controllers->directory);
+        $this->request = new Request($configs->baseURI, $configs->controllers->directory);
 
         return $this;
     }

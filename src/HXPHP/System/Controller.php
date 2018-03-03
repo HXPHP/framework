@@ -1,9 +1,10 @@
 <?php
 namespace HXPHP\System;
 
-use HXPHP\System\Controller\Controller;
+use HXPHP\System\Configs\Config;
+use HXPHP\System\Controller\Core;
 
-class Controller extends Controller
+class Controller extends Core
 {
     public function __construct(Config $configs = null)
     {
