@@ -109,21 +109,15 @@ class Request extends SymfonyHttpFoundationRequest
      */
     public function server(string $name = null)
     {
-        $server = $this->filter($_SERVER, INPUT_SERVER, $this->custom_filters);
+        if ($name && !is_string($name)) {
+            return false;
+        }
 
-        if (!$name)
-            return $server;
-
-        if (!isset($server[$name]) && !isset($_SERVER[$name]))
-            return null;
-
-        if (is_null($server[$name]))
-            return $_SERVER[$name];
-
-        if (!isset($server[$name]))
-            return null;
-
-        return $server[$name];
+        if (!$name) {
+            return $this->server->all();
+        }
+        
+        return $this->server->get($name);
     }
 
     /**
@@ -133,15 +127,18 @@ class Request extends SymfonyHttpFoundationRequest
      */
     public function cookie(string $name = null)
     {
-        $cookie = $this->filter($_COOKIE, INPUT_COOKIE, $this->custom_filters);
+        if ($name && !is_string($name)) {
+            return false;
+        }
 
-        if (!$name)
-            return $cookie;
+        if (!$name) {
+            $data = $this->cookies->all();
+        }
+        else {
+            $data = $this->cookies->get($name, $default);
+        }
 
-        if (!isset($cookie[$name]))
-            return null;
-
-        return $cookie[$name];
+        return $this->filter($data, $name);
     }
 
     /**
