@@ -47,6 +47,42 @@ class Request extends SymfonyHttpFoundationRequest
     }
 
     /**
+     * Obtém os dados enviados através do método GET
+     * @param  string $name Nome do parâmetro
+     * @return null         Retorna o array GET geral ou em um índice específico
+     */
+    // public function get(string $name = null)
+    // {
+    //     $get = $this->filter($_GET, INPUT_GET, $this->custom_filters);
+
+    //     if (!$name) {
+    //         foreach ($get as $field => $value)
+    //             $get[$field] = is_array($value) ? array_map('trim', $value) : trim($value);
+
+    //         return $get;
+    //     }
+
+    //     if (!isset($get[$name]))
+    //         return null;
+
+    //     return trim($get[$name]);
+    // }
+
+    /**
+     * Obtém os dados enviados através do método POST
+     * @param  string $name Nome do parâmetro
+     * @return null         Retorna o array POST geral ou em um índice específico
+     */
+    public function post(string $name = null)
+    {
+        if (!$name) {
+            return $this->request->all();
+        }
+
+        return $this->request->get($name);
+    }
+
+    /**
      * Obtém os dados da superglobal $_SERVER
      * @param  string $name Nome do parâmetro
      * @return null         Retorna o array $_SERVER geral ou em um índice específico
@@ -86,21 +122,6 @@ class Request extends SymfonyHttpFoundationRequest
             return null;
 
         return $cookie[$name];
-    }
-
-    /**
-     * Retorna o método da requisição
-     * @param  string $value Nome do método
-     * @return null          Retorna um booleano ou o método em si
-     */
-    public function getMethod(string $value = null)
-    {
-        $method = $_SERVER['REQUEST_METHOD'];
-
-        if ($value)
-            return $method == $value;
-
-        return $method;
     }
 
     /**
