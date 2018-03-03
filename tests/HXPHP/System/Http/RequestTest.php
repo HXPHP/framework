@@ -213,8 +213,24 @@ final class RequestTest extends BaseTestCase
 		$this->assertTrue($request->isHead());
 	}
 
-	// public function testIsValidFunction(): void
-	// {
+	public function testIsValidFunction(): void
+	{
+		$request = $this->request->create(
+			'/',
+			'GET',
+			[
+				'invalid_integer_field' => 'string instead of integer',
+				'valid_integer_field' => '2018',
+				'email_field' => 'invalid email'
+			]
+		);
 
-	// }
+		$request->setCustomFilters([
+			'invalid_integer_field' => FILTER_VALIDATE_INT,
+			'valid_integer_field' => FILTER_VALIDATE_INT,
+			'email_field' => FILTER_VALIDATE_EMAIL
+		]);
+
+		$this->assertFalse($request->isValid());
+	}
 }
