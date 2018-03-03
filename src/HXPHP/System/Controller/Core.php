@@ -2,10 +2,11 @@
 namespace HXPHP\System\Controller;
 
 use HXPHP\System\Configs\Config;
-use Symfony\Component\HttpFoundation\Request as SymfonyHttpFoundationRequest;
 use HXPHP\System\Http\Request;
 use HXPHP\System\Http\Response;
+use HXPHP\System\Tools;
 use HXPHP\System\View;
+use Symfony\Component\HttpFoundation\Request as SymfonyHttpFoundationRequest;
 
 class Core
 {

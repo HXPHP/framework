@@ -92,6 +92,10 @@ class Request extends SymfonyHttpFoundationRequest
      */
     public function post(string $name = null)
     {
+        if ($name && !is_string($name)) {
+            return false;
+        }
+
         if (!$name) {
             $data = $this->request->all();
         }
@@ -135,7 +139,7 @@ class Request extends SymfonyHttpFoundationRequest
             $data = $this->cookies->all();
         }
         else {
-            $data = $this->cookies->get($name, $default);
+            $data = $this->cookies->get($name);
         }
 
         return $this->filter($data, $name);

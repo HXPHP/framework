@@ -148,15 +148,20 @@ final class RequestTest extends BaseTestCase
 		$this->assertNull($not_exists);
 	}
 
-	// public function testServerFunction(): void
-	// {
+	public function testServerFunction(): void
+	{
+		$this->assertNotEmpty($this->request->server('SCRIPT_FILENAME'));
 
-	// }
+		$all_params = $this->request->server();
+		$this->assertTrue(is_array($all_params) && !empty($all_params));
+	}
 
-	// public function testCookieFunction(): void
-	// {
+	public function testCookieFunction(): void
+	{
+		$request = $this->request->cookies->add(['foo' => 'bar']);
 
-	// }
+		$this->assertEquals('bar', $this->request->cookie('foo'));
+	}
 
 	public function testIsGetFunction(): void
 	{
