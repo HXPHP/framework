@@ -1,10 +1,9 @@
 <?php
 namespace HXPHP\System;
 
-use HXPHP\System\{
-    Http,
-    Configs\Config
-};
+use HXPHP\System\Configs\Config;
+use HXPHP\System\Http\Request;
+use HXPHP\System\Http\Response;
 
 class App
 {
@@ -32,8 +31,8 @@ class App
     public function __construct(Config $configs)
     {
         $this->configs = $configs;
-        $this->request = new Http\Request($configs->baseURI, $configs->global->controllers->directory);
-        $this->response = new Http\Response;
+        $this->request = new Request($configs->baseURI, $configs->global->controllers->directory);
+        $this->response = new Response;
     }
 
     /**
