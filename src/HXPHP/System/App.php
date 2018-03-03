@@ -2,7 +2,6 @@
 namespace HXPHP\System;
 
 use HXPHP\System\Configs\Config;
-use HXPHP\System\Http\Request;
 use HXPHP\System\Http\Response;
 use HXPHP\System\Router;
 
@@ -15,10 +14,10 @@ class App
     public $configs;
 
     /**
-     * Injeção do Request
+     * Injeção do Router
      * @var object
      */
-    public $request;
+    public $router;
 
     /**
      * Injeção do Response
@@ -32,7 +31,6 @@ class App
     public function __construct(Config $configs)
     {
         $this->configs = $configs;
-        $this->request = new Request();
         $this->router = new Router($configs->baseURI, $configs->global->controllers->directory);
         $this->response = new Response;
     }

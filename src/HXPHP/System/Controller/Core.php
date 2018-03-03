@@ -2,6 +2,7 @@
 namespace HXPHP\System\Controller;
 
 use HXPHP\System\Configs\Config;
+use Symfony\Component\HttpFoundation\Request as SymfonyHttpFoundationRequest;
 use HXPHP\System\Http\Request;
 use HXPHP\System\Http\Response;
 use HXPHP\System\View;
@@ -51,7 +52,28 @@ class Core
     {
         //Injeção das dependências
         $this->configs = $configs;
-        $this->request = new Request($configs->baseURI, $configs->controllers->directory);
+
+        SymfonyHttpFoundationRequest::setFactory(function (
+            array $query = array(),
+            array $request = array(),
+            array $attributes = array(),
+            array $cookies = array(),
+            array $files = array(),
+            array $server = array(),
+            $content = null
+        ) {
+            return new Request(
+                $query,
+                $request,
+                $attributes,
+                $cookies,
+                $files,
+                $server,
+                $content
+            );
+        });
+
+        $this->request = Request::createFromGlobals();
 
         return $this;
     }

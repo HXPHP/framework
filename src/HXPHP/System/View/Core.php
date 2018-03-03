@@ -19,12 +19,6 @@ class Core
     private $configs;
 
     /**
-     * Injeção do Http Request
-     * @var object
-     */
-    private $request;
-
-    /**
      * Parâmetros de configuração da VIEW
      * @var string
      */
@@ -48,7 +42,6 @@ class Core
          * @var object
          */
         $this->configs = $configs;
-        $this->request = new Request($configs->baseURI);
 
         /**
          * Subfolder

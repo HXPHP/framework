@@ -1,8 +1,6 @@
 <?php
 namespace HXPHP\System\Configs;
 
-use HXPHP\System\Http\Request;
-
 class Bootstrap
 {
     const DS = DIRECTORY_SEPARATOR;
