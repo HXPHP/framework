@@ -51,22 +51,18 @@ class Request extends SymfonyHttpFoundationRequest
      * @param  string $name Nome do parâmetro
      * @return null         Retorna o array GET geral ou em um índice específico
      */
-    // public function get(string $name = null)
-    // {
-    //     $get = $this->filter($_GET, INPUT_GET, $this->custom_filters);
+    public function get($name = null, $default = null)
+    {
+        if ($name && !is_string($name)) {
+            return false;
+        }
 
-    //     if (!$name) {
-    //         foreach ($get as $field => $value)
-    //             $get[$field] = is_array($value) ? array_map('trim', $value) : trim($value);
+        if (!$name) {
+            return $this->query->all();
+        }
 
-    //         return $get;
-    //     }
-
-    //     if (!isset($get[$name]))
-    //         return null;
-
-    //     return trim($get[$name]);
-    // }
+        return $this->query->get($name, $default);
+    }
 
     /**
      * Obtém os dados enviados através do método POST

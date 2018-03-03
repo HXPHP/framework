@@ -99,11 +99,35 @@ final class RequestTest extends BaseTestCase
 		);
 
 		$hello = $request->post('hello');
-
 		$this->assertEquals("world", $hello);
 
 		$all_params = $request->post();
-
 		$this->assertInternalType("array", $all_params);
+
+		$not_exists = $request->post('not_exists');
+		$this->assertNull($not_exists);
+	}
+
+	public function testGetFunction(): void
+	{
+		$request = $this->request->create(
+			'/',
+			'GET',
+			[
+				'hello' => 'world'
+			]
+		);
+
+		$hello = $request->get('hello');
+		$this->assertEquals("world", $hello);
+
+		$all_params = $request->get();
+		$this->assertInternalType("array", $all_params);
+
+		$not_exists = $request->get('not_exists');
+		$this->assertNull($not_exists);
+
+		$type_error = $request->get(['something']);
+		$this->assertFalse($type_error);
 	}
 }
