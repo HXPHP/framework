@@ -1,13 +1,20 @@
 <?php
 namespace HXPHP\System\Http;
 
-class Request
+use Symfony\Component\HttpFoundation\Request as SymfonyHttpFoundationRequest;
+
+class Request extends SymfonyHttpFoundationRequest
 {
     /**
      * Filtros customizados de tratamento
      * @var array
      */
     public $custom_filters = [];
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
 
     /**
      * Define filtros/flags customizados (http://php.net/manual/en/filter.filters.sanitize.php)
