@@ -1,6 +1,8 @@
 <?php
 namespace HXPHP\System;
 
+use HXPHP\System\Tools;
+
 class Router
 {
 	public $subfolder = '';

@@ -1,8 +1,6 @@
 <?php
 namespace HXPHP\System\Http;
 
-use HXPHP\System\Tools;
-
 class Request
 {
     /**
@@ -39,50 +37,6 @@ class Request
             $filters = array_merge($filters, $custom_filters);
 
         return filter_input_array($data, $filters);
-    }
-
-    /**
-     * Obtém os dados enviados através do método GET
-     * @param  string $name Nome do parâmetro
-     * @return null         Retorna o array GET geral ou em um índice específico
-     */
-    public function get(string $name = null)
-    {
-        $get = $this->filter($_GET, INPUT_GET, $this->custom_filters);
-
-        if (!$name) {
-            foreach ($get as $field => $value)
-                $get[$field] = is_array($value) ? array_map('trim', $value) : trim($value);
-
-            return $get;
-        }
-
-        if (!isset($get[$name]))
-            return null;
-
-        return trim($get[$name]);
-    }
-
-    /**
-     * Obtém os dados enviados através do método POST
-     * @param  string $name Nome do parâmetro
-     * @return null         Retorna o array POST geral ou em um índice específico
-     */
-    public function post(string $name = null)
-    {
-        $post = $this->filter($_POST, INPUT_POST, $this->custom_filters);
-
-        if (!$name && $post) {
-            foreach ($post as $field => $value)
-                $post[$field] = is_array($value) ? array_map('trim', $value) : trim($value);
-
-            return $post;
-        }
-
-        if (!isset($post[$name]))
-            return null;
-
-        return trim($post[$name]);
     }
 
     /**
