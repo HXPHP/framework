@@ -46,67 +46,60 @@ final class RequestTest extends BaseTestCase
 		$method = $request->getMethod();
 
 		$this->assertEquals("POST", $method);
-	}
+	}	
 
-	public function testIsGetMethodFunction(): void
+	public function testSetCustomFiltersFunction(): void
 	{
 		$request = $this->request->create(
 			'/',
-			'GET'
-		);
-		
-		$this->assertTrue($request->isGet());
-	}
-
-	public function testIsPostMethodFunction(): void
-	{
-		$request = $this->request->create(
-			'/',
-			'POST'
-		);
-		
-		$this->assertTrue($request->isPost());
-	}
-
-	public function testIsPutMethodFunction(): void
-	{
-		$request = $this->request->create(
-			'/',
-			'PUT'
-		);
-		
-		$this->assertTrue($request->isPut());
-	}
-
-	public function testIsHeadMethodFunction(): void
-	{
-		$request = $this->request->create(
-			'/',
-			'HEAD'
-		);
-		
-		$this->assertTrue($request->isHead());
-	}
-
-	public function testPostFunction(): void
-	{
-		$request = $this->request->create(
-			'/',
-			'POST',
+			'GET',
 			[
-				'hello' => 'world'
+				'invalid_integer_field' => 'string instead of integer',
+				'valid_integer_field' => '2018',
+				'email_field' => 'invalid email'
 			]
 		);
 
-		$hello = $request->post('hello');
-		$this->assertEquals("world", $hello);
+		$request->setCustomFilters([
+			'invalid_integer_field' => FILTER_SANITIZE_NUMBER_INT,
+			'valid_integer_field' => FILTER_SANITIZE_NUMBER_INT,
+			'email_field' => FILTER_VALIDATE_EMAIL
+		]);
 
-		$all_params = $request->post();
-		$this->assertInternalType("array", $all_params);
-
-		$not_exists = $request->post('not_exists');
-		$this->assertNull($not_exists);
+		$this->assertNotEmpty($request->custom_filters);
 	}
+
+	public function testFilterFunction(): void
+	{
+		$request = $this->request->create(
+			'/',
+			'GET',
+			[
+				'invalid_integer_field' => 'string instead of integer',
+				'valid_integer_field' => '2018',
+				'email_field' => 'invalid email',
+				'allowed_html_field' => '<strong>Allowed</strong>',
+				'invalid_html_field' => '<script></script>',
+				'multiple_integer_field' => ['value1', 'value2']
+			]
+		);
+
+		$request->setCustomFilters([
+			'invalid_integer_field' => FILTER_SANITIZE_NUMBER_INT,
+			'valid_integer_field' => FILTER_SANITIZE_NUMBER_INT,
+			'email_field' => FILTER_VALIDATE_EMAIL,
+			'allowed_html_field' => [
+				'filter' => FILTER_UNSAFE_RAW
+			]
+		]);
+
+		$this->assertEmpty($request->get('invalid_integer_field'));
+		$this->assertEquals(2018, $request->get('valid_integer_field'));
+		$this->assertFalse($request->get('email_field'));
+		$this->assertEquals('<strong>Allowed</strong>', $request->get('allowed_html_field'));
+		$this->assertEmpty($request->get('invalid_html_field'));
+		$this->assertEquals(['value1', 'value2'], $request->get('multiple_integer_field'));
+	}	
 
 	public function testGetFunction(): void
 	{
@@ -130,4 +123,89 @@ final class RequestTest extends BaseTestCase
 		$type_error = $request->get(['something']);
 		$this->assertFalse($type_error);
 	}
+
+	public function testPostFunction(): void
+	{
+		$request = $this->request->create(
+			'/',
+			'POST',
+			[
+				'hello' => 'world'
+			]
+		);
+
+		$hello = $request->post('hello');
+		$this->assertEquals("world", $hello);
+
+		$all_params = $request->post();
+		$this->assertInternalType("array", $all_params);
+
+		$not_exists = $request->post('not_exists');
+		$this->assertNull($not_exists);
+	}
+
+	// public function testServerFunction(): void
+	// {
+
+	// }
+
+	// public function testCookieFunction(): void
+	// {
+
+	// }
+
+	public function testIsGetFunction(): void
+	{
+		$request = $this->request->create(
+			'/',
+			'GET'
+		);
+		
+		$this->assertTrue($request->isGet());
+	}
+
+	public function testIsPostFunction(): void
+	{
+		$request = $this->request->create(
+			'/',
+			'POST'
+		);
+		
+		$this->assertTrue($request->isPost());
+	}
+
+	public function testIsPutFunction(): void
+	{
+		$request = $this->request->create(
+			'/',
+			'PUT'
+		);
+		
+		$this->assertTrue($request->isPut());
+	}
+
+	public function testIsDeleteFunction(): void
+	{
+		$request = $this->request->create(
+			'/',
+			'DELETE'
+		);
+		
+		$this->assertTrue($request->isDelete());
+	}
+
+	public function testIsHeadFunction(): void
+	{
+		$request = $this->request->create(
+			'/',
+			'HEAD'
+		);
+		
+		$this->assertTrue($request->isHead());
+	}
+
+	// public function testIsValidFunction(): void
+	// {
+
+	// }
 }

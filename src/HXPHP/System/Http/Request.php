@@ -27,23 +27,41 @@ class Request extends SymfonyHttpFoundationRequest
 
     /**
      * Realiza o tratamento das super globais
-     * @param  array $request 		  Array nativo com campos e valores passados
-     * @param  const $data    		  Constante que será tratada
-     * @param  array $custom_filters  Filtros customizados para determinados campos
-     * @return array                  Constate tratada
+     * @param  array|string $data    		  Dados que serão filtrados
+     * @return array|string                   Constate tratada
      */
-    public function filter(array $request, $data, array $custom_filters = [])
+    public function filter($data, $key = null)
     {
-        $filters = [];
+        $filters = $this->custom_filters;
 
-        foreach ($request as $key => $value)
-            if (!array_key_exists($key, $custom_filters))
-                $filters[$key] = constant('FILTER_SANITIZE_STRING');
+        if (!is_array($data)) {
+            if (array_key_exists($key, $filters)) {
+                $filter = $filters[$key];
 
-        if (is_array($custom_filters) && is_array($custom_filters))
-            $filters = array_merge($filters, $custom_filters);
+                if (is_array($filter)) {
+                    $only_filter = $filter['filter'];
+                    $flags = array_key_exists('flags', $filter) ? $filter['flags'] : [];
 
-        return filter_input_array($data, $filters);
+                    return filter_var($data, $only_filter, $flags);
+                }
+
+                return filter_var($data, $filter);
+            }
+
+            return !is_null($data) ? filter_var($data, FILTER_SANITIZE_STRING) : $data;
+        }
+
+        if (is_array($data) && !$key) {
+            foreach ($data as $key => $value) {
+                if (!array_key_exists($key, $filters)) {
+                    $filters[$key] = constant('FILTER_SANITIZE_STRING');
+                }
+            }
+
+            return filter_var_array($data, $filters);
+        }
+
+        return $data;
     }
 
     /**
@@ -58,10 +76,13 @@ class Request extends SymfonyHttpFoundationRequest
         }
 
         if (!$name) {
-            return $this->query->all();
+            $data = $this->query->all();
+        }
+        else {
+            $data = $this->query->get($name, $default);
         }
 
-        return $this->query->get($name, $default);
+        return $this->filter($data, $name);
     }
 
     /**
@@ -72,10 +93,13 @@ class Request extends SymfonyHttpFoundationRequest
     public function post(string $name = null)
     {
         if (!$name) {
-            return $this->request->all();
+            $data = $this->request->all();
+        }
+        else {
+            $data = $this->request->get($name);
         }
 
-        return $this->request->get($name);
+        return $this->filter($data, $name);
     }
 
     /**
@@ -121,15 +145,6 @@ class Request extends SymfonyHttpFoundationRequest
     }
 
     /**
-     * Verifica se o método da requisição é POST
-     * @return boolean Status da verificação
-     */
-    public function isPost(): bool
-    {
-        return $this->getMethod('POST');
-    }
-
-    /**
      * Verifica se o método da requisição é GET
      * @return boolean Status da verificação
      */
@@ -139,12 +154,30 @@ class Request extends SymfonyHttpFoundationRequest
     }
 
     /**
+     * Verifica se o método da requisição é POST
+     * @return boolean Status da verificação
+     */
+    public function isPost(): bool
+    {
+        return $this->getMethod('POST');
+    }
+
+    /**
      * Verifica se o método da requisição é PUT
      * @return boolean Status da verificação
      */
     public function isPut(): bool
     {
         return $this->getMethod('PUT');
+    }
+
+    /**
+     * Verifica se o método da requisição é DELETE
+     * @return boolean Status da verificação
+     */
+    public function isDelete(): bool
+    {
+        return $this->getMethod('DELETE');
     }
 
     /**
