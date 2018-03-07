@@ -1,13 +1,15 @@
 <?php
+
 namespace HXPHP\System\Storage\Cookie;
 
 class Cookie
 {
     /**
-     * Cria um cookie
-     * @param string $name  Nome do cookie
-     * @param string $value Conteúdo do cookie
-     * @param timestamp $time Tempo de duração do cookie
+     * Cria um cookie.
+     *
+     * @param string    $name  Nome do cookie
+     * @param string    $value Conteúdo do cookie
+     * @param timestamp $time  Tempo de duração do cookie
      */
     public function set(string $name, string $value, int $time = 31556926): self
     {
@@ -19,22 +21,25 @@ class Cookie
     }
 
     /**
-     * Seleciona um cookie
-     * @param  string $name Nome do cookie
-     * @return string       Conteúdo do cookie
+     * Seleciona um cookie.
+     *
+     * @param string $name Nome do cookie
+     *
+     * @return string Conteúdo do cookie
      */
     public function get(string $name)
     {
-        if ($this->exists($name))
+        if ($this->exists($name)) {
             return $_COOKIE[$name];
-
-        return null;
+        }
     }
 
     /**
-     * Verifica a existência do cookie
-     * @param  string  $name Nome do cookie
-     * @return boolean       Status do processo
+     * Verifica a existência do cookie.
+     *
+     * @param string $name Nome do cookie
+     *
+     * @return bool Status do processo
      */
     public function exists(string $name): bool
     {
@@ -42,12 +47,14 @@ class Cookie
     }
 
     /**
-     * Exclui um cookie
-     * @param  string $name Nome do cookie
+     * Exclui um cookie.
+     *
+     * @param string $name Nome do cookie
      */
     public function clear(string $name)
     {
-        if ($this->exists($name))
+        if ($this->exists($name)) {
             return $this->set($name, '', -1);
+        }
     }
 }

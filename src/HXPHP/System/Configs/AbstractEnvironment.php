@@ -1,4 +1,5 @@
 <?php
+
 namespace HXPHP\System\Configs;
 
 abstract class AbstractEnvironment
@@ -10,7 +11,8 @@ abstract class AbstractEnvironment
         //Configurações variáveis por ambiente
         $this->baseURI = '/';
 
-        $load = new LoadModules;
+        $load = new LoadModules();
+
         return $load->loadModules($this);
     }
 }

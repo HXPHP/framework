@@ -1,4 +1,5 @@
 <?php
+
 namespace HXPHP\System\Configs;
 
 class GlobalConfig
@@ -11,11 +12,11 @@ class GlobalConfig
 
     public function __construct()
     {
-        $this->site = new \stdClass;
+        $this->site = new \stdClass();
 
-        $this->models = new \stdClass;
-        $this->views = new \stdClass;
-        $this->controllers = new \stdClass;
+        $this->models = new \stdClass();
+        $this->views = new \stdClass();
+        $this->controllers = new \stdClass();
 
         //Site
         if (array_key_exists('HTTP_HOST', $_SERVER)) {
@@ -27,14 +28,14 @@ class GlobalConfig
         }
 
         //Models
-        $this->models->directory = getenv('APP_PATH') . 'models' . DIRECTORY_SEPARATOR;
+        $this->models->directory = getenv('APP_PATH').'models'.DIRECTORY_SEPARATOR;
 
         //Views
-        $this->views->directory = getenv('APP_PATH') . 'views' . DIRECTORY_SEPARATOR;
+        $this->views->directory = getenv('APP_PATH').'views'.DIRECTORY_SEPARATOR;
         $this->views->extension = '.phtml';
 
         //Controller
-        $this->controllers->directory = getenv('APP_PATH') . 'controllers' . DIRECTORY_SEPARATOR;
+        $this->controllers->directory = getenv('APP_PATH').'controllers'.DIRECTORY_SEPARATOR;
         $this->controllers->notFound = 'Error404Controller';
 
         //General

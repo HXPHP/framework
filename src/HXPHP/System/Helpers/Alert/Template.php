@@ -1,4 +1,5 @@
 <?php
+
 namespace HXPHP\System\Helpers\Alert;
 
 class Template
@@ -8,7 +9,7 @@ class Template
 
     public function __construct()
     {
-        $this->setTemplatePath(getenv('TEMPLATES_PATH') . 'Helpers' . DIRECTORY_SEPARATOR . 'Alert' . DIRECTORY_SEPARATOR)
+        $this->setTemplatePath(getenv('TEMPLATES_PATH').'Helpers'.DIRECTORY_SEPARATOR.'Alert'.DIRECTORY_SEPARATOR)
                 ->setTemplateFile('alert');
     }
 
@@ -27,19 +28,21 @@ class Template
     }
 
     /**
-     * Método resposnável pela obtenção do conteúdo do template
+     * Método resposnável pela obtenção do conteúdo do template.
+     *
      * @return html
      */
     public function get(bool $list = false): string
     {
-        if ($list)
+        if ($list) {
             $this->setTemplateFile('alert-list');
+        }
 
-        $template = $this->template_path . $this->template_file . '.html';
+        $template = $this->template_path.$this->template_file.'.html';
 
-        if (!file_exists($template))
+        if (!file_exists($template)) {
             throw new \Exception("O template para a mensagem nao foi localizado: $template", 1);
-
+        }
         return file_get_contents($template);
     }
 }
