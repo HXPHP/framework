@@ -63,12 +63,12 @@ class Core
         $this->configs = $configs;
 
         SymfonyHttpFoundationRequest::setFactory(function (
-            array $query = array(),
-            array $request = array(),
-            array $attributes = array(),
-            array $cookies = array(),
-            array $files = array(),
-            array $server = array(),
+            array $query = [],
+            array $request = [],
+            array $attributes = [],
+            array $cookies = [],
+            array $files = [],
+            array $server = [],
             $content = null
         ) {
             return new Request(
