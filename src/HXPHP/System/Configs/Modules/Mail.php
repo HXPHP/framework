@@ -5,12 +5,13 @@ namespace HXPHP\System\Configs\Modules;
 class Mail
 {
     public $from;
+
     public $from_mail;
 
     public function __construct()
     {
         $this->setFrom([
-            'from'      => 'HXPHP Framework',
+            'from' => 'HXPHP Framework',
             'from_mail' => 'no-reply@hxphp.com.br',
         ]);
     }

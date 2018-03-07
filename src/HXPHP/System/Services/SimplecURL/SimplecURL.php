@@ -8,7 +8,7 @@ class SimplecURL
     {
         $url = explode('?', $url, 2);
 
-        if (count($url) === 2) {
+        if (2 === count($url)) {
             $temp_get = [];
             parse_str($url[1], $temp_get);
 

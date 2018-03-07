@@ -5,6 +5,7 @@ namespace HXPHP\System\Helpers\Menu;
 class RealLink
 {
     private $siteURL;
+
     private $baseURI;
 
     public function __construct(string $siteURL, string $baseURI)

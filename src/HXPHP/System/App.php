@@ -4,7 +4,6 @@ namespace HXPHP\System;
 
 use HXPHP\System\Configs\Config;
 use HXPHP\System\Http\Response;
-use HXPHP\System\Router;
 
 class App
 {
@@ -36,7 +35,7 @@ class App
     {
         $this->configs = $configs;
         $this->router = new Router($configs->baseURI, $configs->global->controllers->directory);
-        $this->response = new Response;
+        $this->response = new Response();
     }
 
     /**
@@ -68,11 +67,11 @@ class App
         /**
          * Variáveis.
          */
-        $subfolder = $this->router->subfolder === 'default' ? '' :
-                $this->router->subfolder . DIRECTORY_SEPARATOR;
+        $subfolder = 'default' === $this->router->subfolder ? '' :
+                $this->router->subfolder.DIRECTORY_SEPARATOR;
         $controller = $this->router->controller;
         $action = $this->router->action;
-      
+
         $controllersDir = $this->configs->controllers->directory;
         $notFoundController = $this->configs->controllers->notFound;
 

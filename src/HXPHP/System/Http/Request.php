@@ -1,4 +1,5 @@
 <?php
+
 namespace HXPHP\System\Http;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyHttpFoundationRequest;
@@ -6,7 +7,8 @@ use Symfony\Component\HttpFoundation\Request as SymfonyHttpFoundationRequest;
 class Request extends SymfonyHttpFoundationRequest
 {
     /**
-     * Filtros customizados de tratamento
+     * Filtros customizados de tratamento.
+     *
      * @var array
      */
     public $custom_filters = [];
@@ -17,7 +19,8 @@ class Request extends SymfonyHttpFoundationRequest
     }
 
     /**
-     * Define filtros/flags customizados (http://php.net/manual/en/filter.filters.sanitize.php)
+     * Define filtros/flags customizados (http://php.net/manual/en/filter.filters.sanitize.php).
+     *
      * @param array $custom_filters Array com nome do campo e seu respectivo filtro
      */
     public function setCustomFilters(array $custom_filters = []): array
@@ -26,9 +29,11 @@ class Request extends SymfonyHttpFoundationRequest
     }
 
     /**
-     * Realiza o tratamento das super globais
-     * @param  array|string $data    		  Dados que serão filtrados
-     * @return array|string                   Constate tratada
+     * Realiza o tratamento das super globais.
+     *
+     * @param array|string $data Dados que serão filtrados
+     *
+     * @return array|string Constate tratada
      */
     public function filter($data, $key = null)
     {
@@ -65,9 +70,9 @@ class Request extends SymfonyHttpFoundationRequest
     }
 
     /**
-     * Obtém os dados enviados através do método GET
-     * @param  string $name Nome do parâmetro
-     * @return null         Retorna o array GET geral ou em um índice específico
+     * Obtém os dados enviados através do método GET.
+     *
+     * @param string $name Nome do parâmetro
      */
     public function get($name = null, $default = null)
     {
@@ -77,8 +82,7 @@ class Request extends SymfonyHttpFoundationRequest
 
         if (!$name) {
             $data = $this->query->all();
-        }
-        else {
+        } else {
             $data = $this->query->get($name, $default);
         }
 
@@ -86,9 +90,9 @@ class Request extends SymfonyHttpFoundationRequest
     }
 
     /**
-     * Obtém os dados enviados através do método POST
-     * @param  string $name Nome do parâmetro
-     * @return null         Retorna o array POST geral ou em um índice específico
+     * Obtém os dados enviados através do método POST.
+     *
+     * @param string $name Nome do parâmetro
      */
     public function post(string $name = null)
     {
@@ -98,8 +102,7 @@ class Request extends SymfonyHttpFoundationRequest
 
         if (!$name) {
             $data = $this->request->all();
-        }
-        else {
+        } else {
             $data = $this->request->get($name);
         }
 
@@ -107,9 +110,9 @@ class Request extends SymfonyHttpFoundationRequest
     }
 
     /**
-     * Obtém os dados da superglobal $_SERVER
-     * @param  string $name Nome do parâmetro
-     * @return null         Retorna o array $_SERVER geral ou em um índice específico
+     * Obtém os dados da superglobal $_SERVER.
+     *
+     * @param string $name Nome do parâmetro
      */
     public function server(string $name = null)
     {
@@ -120,14 +123,14 @@ class Request extends SymfonyHttpFoundationRequest
         if (!$name) {
             return $this->server->all();
         }
-        
+
         return $this->server->get($name);
     }
 
     /**
-     * Obtém os dados da superglobal $_COOKIE
+     * Obtém os dados da superglobal $_COOKIE.
+     *
      * @param string $name Nome do parâmetro
-     * @return null Retorna o array $_COOKIE geral ou em um índice específico
      */
     public function cookie(string $name = null)
     {
@@ -137,8 +140,7 @@ class Request extends SymfonyHttpFoundationRequest
 
         if (!$name) {
             $data = $this->cookies->all();
-        }
-        else {
+        } else {
             $data = $this->cookies->get($name);
         }
 
@@ -146,8 +148,9 @@ class Request extends SymfonyHttpFoundationRequest
     }
 
     /**
-     * Verifica se o método da requisição é GET
-     * @return boolean Status da verificação
+     * Verifica se o método da requisição é GET.
+     *
+     * @return bool Status da verificação
      */
     public function isGet(): bool
     {
@@ -155,8 +158,9 @@ class Request extends SymfonyHttpFoundationRequest
     }
 
     /**
-     * Verifica se o método da requisição é POST
-     * @return boolean Status da verificação
+     * Verifica se o método da requisição é POST.
+     *
+     * @return bool Status da verificação
      */
     public function isPost(): bool
     {
@@ -164,8 +168,9 @@ class Request extends SymfonyHttpFoundationRequest
     }
 
     /**
-     * Verifica se o método da requisição é PUT
-     * @return boolean Status da verificação
+     * Verifica se o método da requisição é PUT.
+     *
+     * @return bool Status da verificação
      */
     public function isPut(): bool
     {
@@ -173,8 +178,9 @@ class Request extends SymfonyHttpFoundationRequest
     }
 
     /**
-     * Verifica se o método da requisição é DELETE
-     * @return boolean Status da verificação
+     * Verifica se o método da requisição é DELETE.
+     *
+     * @return bool Status da verificação
      */
     public function isDelete(): bool
     {
@@ -182,8 +188,9 @@ class Request extends SymfonyHttpFoundationRequest
     }
 
     /**
-     * Verifica se o método da requisição é HEAD
-     * @return boolean Status da verificação
+     * Verifica se o método da requisição é HEAD.
+     *
+     * @return bool Status da verificação
      */
     public function isHead(): bool
     {
@@ -191,14 +198,14 @@ class Request extends SymfonyHttpFoundationRequest
     }
 
     /**
-     * Verifica se os inputs no método requisitado estão no formato correto conforme o array informado $custom_filters
+     * Verifica se os inputs no método requisitado estão no formato correto conforme o array informado $custom_filters.
      *
-     * @return boolean Inputs estão corretos ou não
+     * @return bool Inputs estão corretos ou não
      */
     public function isValid(): bool
     {
         $method = $this->getMethod();
 
-        return array_search(false, $this->$method(), true) === false ? true : false;
+        return false === array_search(false, $this->$method(), true) ? true : false;
     }
 }

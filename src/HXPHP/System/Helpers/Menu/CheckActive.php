@@ -55,6 +55,7 @@ class CheckActive
 
             if ($this->link($real_link)) {
                 $status = true;
+
                 break;
             }
         }
