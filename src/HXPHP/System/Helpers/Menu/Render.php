@@ -10,6 +10,7 @@ class Render
      * @var object
      */
     private $realLink = null;
+
     private $checkActive = null;
 
     /**
@@ -18,6 +19,7 @@ class Render
      * @var array
      */
     private $menu_itens = [];
+
     private $menu_configs = [];
 
     /**
@@ -54,7 +56,7 @@ class Render
         $i = 0;
 
         foreach ($menu_itens as $key => $value) {
-            $i++;
+            ++$i;
             $menu_data = MenuData::get($key);
             $real_link = $this->realLink->get($value);
 

@@ -5,6 +5,7 @@ namespace HXPHP\System\Helpers\Alert;
 class Template
 {
     private $template_path = null;
+
     private $template_file = null;
 
     public function __construct()
@@ -43,6 +44,7 @@ class Template
         if (!file_exists($template)) {
             throw new \Exception("O template para a mensagem nao foi localizado: $template", 1);
         }
+
         return file_get_contents($template);
     }
 }

@@ -8,8 +8,6 @@ class StartSession
      * Security Session Start.
      *
      * @param bool $regenerate Regerar sessão após start
-     *
-     * @return void
      */
     public static function sec_session_start(bool $regenerate = false)
     {
@@ -18,7 +16,7 @@ class StartSession
         session_set_cookie_params($cookieParams['lifetime'], $cookieParams['path'], $cookieParams['domain'], false, true);
 
         session_start([
-            'name'             => 'sec_session_id',
+            'name' => 'sec_session_id',
             'use_only_cookies' => 1,
         ]);
 

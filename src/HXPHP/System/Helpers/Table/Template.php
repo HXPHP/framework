@@ -5,6 +5,7 @@ namespace HXPHP\System\Helpers\Table;
 class Template
 {
     private $template_path;
+
     private $template_file;
 
     public function __construct(string $template_file)
@@ -54,6 +55,7 @@ class Template
         if (!$json) {
             throw new \Exception("Não foi possível obter o conteúdo do template $template. Verifique o código json.", 1);
         }
+
         return $json;
     }
 }

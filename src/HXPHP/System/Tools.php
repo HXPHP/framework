@@ -25,6 +25,7 @@ class Tools
         if (!file_exists($templatePath)) {
             throw new \Exception("O template nao foi localizado: <'$templatePath'>", 1);
         }
+
         return $templatePath;
     }
 
@@ -45,7 +46,7 @@ class Tools
         $password = hash('sha512', $password.$salt);
 
         return [
-            'salt'     => $salt,
+            'salt' => $salt,
             'password' => $password,
         ];
     }

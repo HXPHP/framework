@@ -26,7 +26,7 @@ class Alert
         //Injeção da Sessão
         $this->storage = new Storage\Session\Session();
 
-        if (count($alert) === 0) {
+        if (0 === count($alert)) {
             return;
         }
 
