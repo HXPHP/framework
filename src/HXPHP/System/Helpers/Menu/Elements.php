@@ -1,15 +1,16 @@
 <?php
+
 namespace HXPHP\System\Helpers\Menu;
 
 class Elements
 {
-
     /**
-     * Elementos HTML utilizados na renderização do menu
+     * Elementos HTML utilizados na renderização do menu.
+     *
      * @var array
      */
     private static $elements = [
-        /**
+        /*
          * Tag inicio container
          * ID
          * Classe
@@ -21,19 +22,19 @@ class Elements
 				%s
 			</%s>
 		',
-        /**
+        /*
          * Classe do menu
          * ID do menu
          * Conteúdo do menu
          */
         'menu' => '<ul class="%s" id="%s">%s</ul>',
-        /**
+        /*
          * Classe
          * Classe ativa
          * Conteúdo
          */
         'menu_item' => '<li class="%s %s">%s</li>',
-        /**
+        /*
          * Link
          * Classe
          * Classe ativa
@@ -44,7 +45,7 @@ class Elements
          * After
          */
         'link' => '<a href="%s" class="%s %s" title="%s"><i class="fa fa-%s"></i> %s%s%s</a>',
-        /**
+        /*
          * Link
          * Classe
          * Classe Ativa
@@ -62,30 +63,33 @@ class Elements
 			</a>
 			%s
 		',
-        /**
+        /*
          * ID dropdown
          * Classe dropdown
          * Conteúdo
          */
         'dropdown' => '<ul id="hxphp-submenu-%s" class="%s">%s</ul>',
-        /**
+        /*
          * Classe
          * Classe ativa
          * Conteúdo
          */
-        'dropdown_item' => '<li class="%s %s">%s</li>'
+        'dropdown_item' => '<li class="%s %s">%s</li>',
     ];
 
     /**
-     * Retorna um elemento
-     * @param  string $name Nome do elemento
-     * @param  array  $args Array para preencher os coringas presentes nos elementos
-     * @return string       HTML do elemento
+     * Retorna um elemento.
+     *
+     * @param string $name Nome do elemento
+     * @param array  $args Array para preencher os coringas presentes nos elementos
+     *
+     * @return string HTML do elemento
      */
     public static function get(string $name, array $args = []): string
     {
-        if (!self::$elements[$name])
+        if (!self::$elements[$name]) {
             return false;
+        }
 
         if ($args) {
             $args = array_values($args);

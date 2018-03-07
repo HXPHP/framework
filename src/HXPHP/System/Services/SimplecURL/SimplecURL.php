@@ -1,4 +1,5 @@
 <?php
+
 namespace HXPHP\System\Services\SimplecURL;
 
 class SimplecURL
@@ -14,7 +15,7 @@ class SimplecURL
             $get = array_merge($get, $temp_get);
         }
 
-        $ch = curl_init($url[0] . "?" . http_build_query($get));
+        $ch = curl_init($url[0].'?'.http_build_query($get));
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post));
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);

@@ -1,22 +1,26 @@
 <?php
+
 namespace HXPHP\System\Services\PasswordRecovery;
 
 class PasswordRecovery
 {
     /**
-     * Link de redefinição
+     * Link de redefinição.
+     *
      * @var null
      */
     public $link = null;
 
     /**
-     * Código alfanumérico de autenticação da requisição
+     * Código alfanumérico de autenticação da requisição.
+     *
      * @var string
      */
     public $token;
 
     /**
-     * Define o link
+     * Define o link.
+     *
      * @param string $link Prefixo do link c/ barra no final Ex.: http://www.site.com.br/esqueci-a-senha/redefinir/
      */
     public function __construct(string $link)
@@ -25,7 +29,7 @@ class PasswordRecovery
     }
 
     /**
-     * Gera o token
+     * Gera o token.
      */
     private function generateToken()
     {
@@ -33,12 +37,13 @@ class PasswordRecovery
     }
 
     /**
-     * Define o link
+     * Define o link.
+     *
      * @param string $link Prefixo do link c/ barra no final
      */
     public function setLink(string $link)
     {
         $this->generateToken();
-        $this->link = $link . $this->token;
+        $this->link = $link.$this->token;
     }
 }

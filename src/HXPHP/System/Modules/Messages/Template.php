@@ -1,10 +1,12 @@
 <?php
+
 namespace HXPHP\System\Modules\Messages;
 
 class Template
 {
     /**
-     * Conteúdo do template JSON
+     * Conteúdo do template JSON.
+     *
      * @var array
      */
     private $content;
@@ -15,9 +17,11 @@ class Template
     }
 
     /**
-     * Retorna o conteúdo do template mediante o código informado com os parâmetros substituído
-     * @param  string $code   Código do template
-     * @param  array  $fields Fields e seus parâmetros para substituição
+     * Retorna o conteúdo do template mediante o código informado com os parâmetros substituído.
+     *
+     * @param string $code   Código do template
+     * @param array  $fields Fields e seus parâmetros para substituição
+     *
      * @return array
      */
     public function getByCode(string $code, array $fields = []): array
@@ -27,8 +31,9 @@ class Template
 
             if ($fields) {
                 foreach ($fields as $field => $params) {
-                    if (!($output[$field]) || !($params))
+                    if (!($output[$field]) || !($params)) {
                         continue;
+                    }
 
                     $output[$field] = vsprintf($output[$field], $params);
                 }

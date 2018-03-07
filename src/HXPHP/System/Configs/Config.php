@@ -1,4 +1,5 @@
 <?php
+
 namespace HXPHP\System\Configs;
 
 class Config extends Bootstrap
@@ -10,10 +11,10 @@ class Config extends Bootstrap
     public function __construct()
     {
         parent::__construct();
-        
-        $this->global = new GlobalConfig;
-        $this->env = new Environment;
-        $this->define = new DefineEnvironment;
+
+        $this->global = new GlobalConfig();
+        $this->env = new Environment();
+        $this->define = new DefineEnvironment();
         $this->env->add();
     }
 
@@ -21,12 +22,11 @@ class Config extends Bootstrap
     {
         $current = $this->define->getDefault();
 
-        if (isset($this->env->$current->$param))
+        if (isset($this->env->$current->$param)) {
             return $this->env->$current->$param;
-
-        else if (isset($this->global->$param))
+        } elseif (isset($this->global->$param)) {
             return $this->global->$param;
-
+        }
 
         throw new \Exception("Parametro/Modulo '$param' nao encontrado. Verifique se o ambiente definido esta configurado e os modulo utilizados registrados.", 1);
     }

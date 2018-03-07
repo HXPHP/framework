@@ -1,11 +1,13 @@
 <?php
+
 namespace HXPHP\System;
 
 class Tools
 {
     /**
-     * Exibe os dados
-     * @param  mist $data Variável que será "debugada"
+     * Exibe os dados.
+     *
+     * @param mist $data Variável que será "debugada"
      */
     public static function dd($data, bool $dump = true)
     {
@@ -18,37 +20,42 @@ class Tools
 
     public static function getTemplatePath(string $component, string $name, string $templateFile)
     {
-        $templatePath = getenv('TEMPLATES_PATH') . $component . DIRECTORY_SEPARATOR . $name . DIRECTORY_SEPARATOR . $templateFile;
+        $templatePath = getenv('TEMPLATES_PATH').$component.DIRECTORY_SEPARATOR.$name.DIRECTORY_SEPARATOR.$templateFile;
 
-        if (!file_exists($templatePath))
+        if (!file_exists($templatePath)) {
             throw new \Exception("O template nao foi localizado: <'$templatePath'>", 1);
-
+        }
         return $templatePath;
     }
 
     /**
-     * Criptografa a senha do usuário no padrão HXPHP
-     * @param  string $password Senha do usuário
-     * @param  string $salt     Código alfanumérico
-     * @return array            Array com o SALT e a SENHA
+     * Criptografa a senha do usuário no padrão HXPHP.
+     *
+     * @param string $password Senha do usuário
+     * @param string $salt     Código alfanumérico
+     *
+     * @return array Array com o SALT e a SENHA
      */
     public static function hashHX(string $password, string $salt = null): array
     {
-        if (!$salt)
+        if (!$salt) {
             $salt = hash('sha512', uniqid(mt_rand(1, mt_getrandmax()), true));
+        }
 
-        $password = hash('sha512', $password . $salt);
+        $password = hash('sha512', $password.$salt);
 
         return [
-            'salt' => $salt,
-            'password' => $password
+            'salt'     => $salt,
+            'password' => $password,
         ];
     }
 
     /**
-     * Processo de tratamento para o mecanismo MVC
-     * @param string $input     String que será convertida
-     * @return string           String convertida
+     * Processo de tratamento para o mecanismo MVC.
+     *
+     * @param string $input String que será convertida
+     *
+     * @return string String convertida
      */
     public static function filteredName(string $input): string
     {
@@ -57,12 +64,13 @@ class Tools
 
         $find = [
             '-',
-            '_'
+            '_',
         ];
         $replace = [
             ' ',
-            ' '
+            ' ',
         ];
+
         return str_replace(' ', '', ucwords(str_replace($find, $replace, $input)));
     }
 
