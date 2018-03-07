@@ -1,4 +1,5 @@
 <?php
+
 namespace HXPHP\System\Modules\Messages;
 
 use HXPHP\System\Tools;
@@ -6,35 +7,40 @@ use HXPHP\System\Tools;
 class LoadTemplate
 {
     /**
-     * JSON do template
+     * JSON do template.
+     *
      * @var json
      */
     private $json;
 
     /**
-     * Caminho do template
+     * Caminho do template.
+     *
      * @var string
      */
     public $file = null;
 
     /**
-     * Método responsável pela leitura do arquivo JSON
+     * Método responsável pela leitura do arquivo JSON.
+     *
      * @param string $template Nome do template
      */
     public function __construct(string $template, string $extension = '.json')
     {
         /**
-         * Caminho completo do template
+         * Caminho completo do template.
+         *
          * @var string
          */
-        $template = Tools::getTemplatePath('Modules', 'Messages', $template . $extension);
+        $template = Tools::getTemplatePath('Modules', 'Messages', $template.$extension);
 
         $this->file = $template;
         $this->json = file_get_contents($template);
     }
 
     /**
-     * Retorna o conteúdo do template
+     * Retorna o conteúdo do template.
+     *
      * @return json
      */
     public function getJson()
@@ -43,7 +49,8 @@ class LoadTemplate
     }
 
     /**
-     * Retorna o caminho do template
+     * Retorna o caminho do template.
+     *
      * @return string
      */
     public function getTemplatePath(): string

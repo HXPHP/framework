@@ -1,4 +1,5 @@
 <?php
+
 namespace HXPHP\System\Helpers\Alert;
 
 use HXPHP\System\Storage;
@@ -6,13 +7,15 @@ use HXPHP\System\Storage;
 class Alert
 {
     /**
-     * Injeção do controle de sessão
+     * Injeção do controle de sessão.
+     *
      * @var object
      */
     private $storage;
 
     /**
-     * Método construtor
+     * Método construtor.
+     *
      * @param array $alert ['Classe CSS', 'Título do alerta', 'Mensagem do alerta']
      */
     public function __construct(array $alert)
@@ -21,31 +24,35 @@ class Alert
         $alert = array_values($alert);
 
         //Injeção da Sessão
-        $this->storage = new Storage\Session\Session;
+        $this->storage = new Storage\Session\Session();
 
-        if (count($alert) === 0)
-            return null;
+        if (0 === count($alert)) {
+            return;
+        }
 
         $alert[2] = $alert[2] ?? '';
 
         list($style, $title, $message) = $alert;
 
         /**
-         * Rederiza a mensagem
+         * Rederiza a mensagem.
+         *
          * @var string
          */
         $render = new Render();
         $render = $render->get($message);
 
         /**
-         * Recupera o template html ara a mensagem
+         * Recupera o template html ara a mensagem.
+         *
          * @var html
          */
         $template = new Template();
         $template = $template->get(is_array($message));
 
         /**
-         * Aplica a mensagem no template
+         * Aplica a mensagem no template.
+         *
          * @var html
          */
         $content = sprintf($template, $style, $title, $render);
@@ -54,7 +61,8 @@ class Alert
     }
 
     /**
-     * Retorna os alertas da aplicação
+     * Retorna os alertas da aplicação.
+     *
      * @return html
      */
     public function getAlert()
@@ -66,7 +74,8 @@ class Alert
     }
 
     /**
-     * Retorna os alertas da aplicação
+     * Retorna os alertas da aplicação.
+     *
      * @return html
      */
     public function __toString()

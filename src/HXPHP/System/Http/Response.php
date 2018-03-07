@@ -1,16 +1,17 @@
 <?php
+
 namespace HXPHP\System\Http;
 
 class Response
 {
-
     /**
-     * Redirecionamento
-     * @param  string $url URL para aonde a aplicação deve ser redirecionada
+     * Redirecionamento.
+     *
+     * @param string $url URL para aonde a aplicação deve ser redirecionada
      */
     public function redirectTo(string $url)
     {
-        $this->header('location: ' . $url);
+        $this->header('location: '.$url);
 
         exit();
     }
@@ -19,5 +20,4 @@ class Response
     {
         header($header);
     }
-
 }

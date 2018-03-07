@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests;
 
 use HXPHP\System\App;
@@ -7,31 +8,31 @@ use PHPUnit\Framework\TestCase;
 
 abstract class BaseTestCase extends TestCase
 {
-	protected $baseURI = 'https://hxphp.dev';
+    protected $baseURI = 'https://hxphp.dev';
 
-	private $configs;
+    private $configs;
 
-	protected $app;
+    protected $app;
 
-	public function __construct()
-	{
-		parent::__construct();
+    public function __construct()
+    {
+        parent::__construct();
 
-		$this->createConfigs()
-				->createApplication();
-	}
+        $this->createConfigs()
+                ->createApplication();
+    }
 
-	private function createConfigs()
-	{
-		$this->configs = new Config;
+    private function createConfigs()
+    {
+        $this->configs = new Config();
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function createApplication()
-	{
-		$this->app = new App($this->configs);
+    public function createApplication()
+    {
+        $this->app = new App($this->configs);
 
-		return $this;
-	}
+        return $this;
+    }
 }
