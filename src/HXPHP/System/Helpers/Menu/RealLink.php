@@ -1,4 +1,5 @@
 <?php
+
 namespace HXPHP\System\Helpers\Menu;
 
 class RealLink
@@ -13,9 +14,11 @@ class RealLink
     }
 
     /**
-     * Retorna o link com os coringas preenchidos
-     * @param  string $value Link
-     * @return string        Link tratado
+     * Retorna o link com os coringas preenchidos.
+     *
+     * @param string $value Link
+     *
+     * @return string Link tratado
      */
     public function get($value)
     {
@@ -29,13 +32,13 @@ class RealLink
             '%site_URL',
             '%site_url',
             '%baseURI%',
-            '%base_uri%'
+            '%base_uri%',
                 ], [
-            $this->siteURL . $this->baseURI,
-            $this->siteURL . $this->baseURI,
-            $this->siteURL . $this->baseURI,
+            $this->siteURL.$this->baseURI,
+            $this->siteURL.$this->baseURI,
+            $this->siteURL.$this->baseURI,
             $this->baseURI,
-            $this->baseURI
+            $this->baseURI,
                 ], $value
         );
     }

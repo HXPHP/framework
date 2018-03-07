@@ -1,4 +1,5 @@
 <?php
+
 namespace HXPHP\System\Configs\Modules;
 
 class Mail
@@ -9,8 +10,8 @@ class Mail
     public function __construct()
     {
         $this->setFrom([
-            'from' => 'HXPHP Framework',
-            'from_mail' => 'no-reply@hxphp.com.br'
+            'from'      => 'HXPHP Framework',
+            'from_mail' => 'no-reply@hxphp.com.br',
         ]);
     }
 
@@ -26,7 +27,7 @@ class Mail
     {
         return [
             'from_mail' => $this->from_mail,
-            'from_name' => $this->from
+            'from_name' => $this->from,
         ];
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace HXPHP\System\Configs;
 
 class RegisterModules
@@ -11,7 +12,7 @@ class RegisterModules
             'database',
             'mail',
             'menu',
-            'auth'
+            'auth',
         ];
     }
 }

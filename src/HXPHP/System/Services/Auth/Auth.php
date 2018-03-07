@@ -1,27 +1,29 @@
 <?php
+
 namespace HXPHP\System\Services\Auth;
 
-use HXPHP\System\{
-    Http,
-    Storage
-};
+use HXPHP\System\Http;
+use HXPHP\System\Storage;
 
 class Auth
 {
     /**
-     * Injeção do Request
+     * Injeção do Request.
+     *
      * @var object
      */
     public $request;
 
     /**
-     * Injeção do Response
+     * Injeção do Response.
+     *
      * @var object
      */
     public $response;
 
     /**
-     * Injeção do controle de sessão
+     * Injeção do controle de sessão.
+     *
      * @var object
      */
     public $storage;
@@ -31,18 +33,18 @@ class Auth
     private $subfolder;
 
     /**
-     * Método construtor
+     * Método construtor.
      */
     public function __construct(array $after_login, array $after_logout, bool $redirect = false, string $subfolder = 'default')
     {
         //Instância dos objetos injetados
-        $this->request = new Http\Request;
-        $this->response = new Http\Response;
-        $this->storage = new Storage\Session\Session;
+        $this->request = new Http\Request();
+        $this->response = new Http\Response();
+        $this->storage = new Storage\Session\Session();
 
-        if (!($after_login[$subfolder]) || !($after_logout[$subfolder]))
+        if (!($after_login[$subfolder]) || !($after_logout[$subfolder])) {
             throw new \Exception("Verifique as configuracoes de autenticacao para a subpasta: < $subfolder >", 1);
-
+        }
         //Configuração
         $this->url_redirect_after_login = $after_login[$subfolder];
         $this->url_redirect_after_logout = $after_logout[$subfolder];
@@ -52,67 +54,76 @@ class Auth
     }
 
     /**
-     * Autentica o usuário
-     * @param  integer $user_id  ID do usuário
-     * @param  string $username  Nome de usuário
+     * Autentica o usuário.
+     *
+     * @param int    $user_id   ID do usuário
+     * @param string $username  Nome de usuário
      * @param string $user_role Role do usuário
      */
     public function login(int $user_id, string $username, string $user_role = null)
     {
-        $user_id = intval(preg_replace("/[^0-9]+/", "", $user_id));
-        $username = preg_replace("/[^a-zA-Z0-9_\-]+/", "", $username);
-        $login_string = hash('sha512', $username . $this->request->server('REMOTE_ADDR') . $this->request->server('HTTP_USER_AGENT'));
+        $user_id = intval(preg_replace('/[^0-9]+/', '', $user_id));
+        $username = preg_replace("/[^a-zA-Z0-9_\-]+/", '', $username);
+        $login_string = hash('sha512', $username.$this->request->server('REMOTE_ADDR').$this->request->server('HTTP_USER_AGENT'));
 
-        $this->storage->set($this->subfolder . '_user_id', $user_id);
-        $this->storage->set($this->subfolder . '_username', $username);
-        $this->storage->set($this->subfolder . '_user_role', $user_role);
-        $this->storage->set($this->subfolder . '_login_string', $login_string);
+        $this->storage->set($this->subfolder.'_user_id', $user_id);
+        $this->storage->set($this->subfolder.'_username', $username);
+        $this->storage->set($this->subfolder.'_user_role', $user_role);
+        $this->storage->set($this->subfolder.'_login_string', $login_string);
 
-        if ($this->redirect)
+        if ($this->redirect) {
             return $this->response->redirectTo($this->url_redirect_after_login);
+        }
     }
 
     /**
-     * Método de logout de usuários
+     * Método de logout de usuários.
      */
     public function logout()
     {
-        $this->storage->clear($this->subfolder . '_user_id');
-        $this->storage->clear($this->subfolder . '_username');
-        $this->storage->clear($this->subfolder . '_login_string');
+        $this->storage->clear($this->subfolder.'_user_id');
+        $this->storage->clear($this->subfolder.'_username');
+        $this->storage->clear($this->subfolder.'_login_string');
 
         $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000, $params["path"], $params["domain"], $params["secure"], $params["httponly"]);
+        setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
         session_destroy();
 
-        if ($this->redirect)
+        if ($this->redirect) {
             return $this->response->redirectTo($this->url_redirect_after_logout);
+        }
     }
 
     /**
-     * Valida a autenticação e redireciona mediante o estado do usuário
-     * @param  boolean $redirect Parâmetro que define se é uma página pública ou não
+     * Valida a autenticação e redireciona mediante o estado do usuário.
+     *
+     * @param bool $redirect Parâmetro que define se é uma página pública ou não
      */
     public function redirectCheck(bool $redirect = false)
     {
-        if ($redirect && $this->login_check())
+        if ($redirect && $this->login_check()) {
             $this->response->redirectTo($this->url_redirect_after_login);
-        elseif (!$this->login_check())
-            if (!$redirect)
+        } elseif (!$this->login_check()) {
+            if (!$redirect) {
                 $this->logout();
+            }
+        }
     }
 
     /**
-     * Valida a autenticação e redireciona mediante o estado do usuário
+     * Valida a autenticação e redireciona mediante o estado do usuário.
+     *
      * @param array $roles Array com roles são permitidas o acesso a esta página
      */
     public function roleCheck(array $roles = [])
     {
         if ($this->login_check()) {
-            if (!in_array($this->getUserRole(), $roles))
+            if (!in_array($this->getUserRole(), $roles)) {
                 $this->redirectCheck(true);
-        } else
+            }
+        } else {
             $this->response->redirectTo($this->url_redirect_after_logout);
+        }
     }
 
     public function loginCheck()
@@ -121,43 +132,46 @@ class Auth
     }
 
     /**
-     * Verifica se o usuário está logado
-     * @return boolean Status da autenticação
+     * Verifica se o usuário está logado.
+     *
+     * @return bool Status da autenticação
      */
     public function login_check(): bool
     {
-        if ($this->storage->exists($this->subfolder . '_user_id') &&
-                $this->storage->exists($this->subfolder . '_username') &&
-                $this->storage->exists($this->subfolder . '_login_string')) {
-
+        if ($this->storage->exists($this->subfolder.'_user_id') &&
+                $this->storage->exists($this->subfolder.'_username') &&
+                $this->storage->exists($this->subfolder.'_login_string')) {
             $IP = is_null($this->request->server('HTTP_X_FORWARDED_FOR')) ? $this->request->server('REMOTE_ADDR') : $this->request->server('HTTP_X_FORWARDED_FOR');
 
-            $login_string = hash('sha512', $this->storage->get($this->subfolder . '_username')
-                                             . $IP
-                                             . $this->request->server('HTTP_USER_AGENT'));
+            $login_string = hash('sha512', $this->storage->get($this->subfolder.'_username')
+                                             .$IP
+                                             .$this->request->server('HTTP_USER_AGENT'));
 
-            if ($login_string == $this->storage->get($this->subfolder . '_login_string'))
+            if ($login_string == $this->storage->get($this->subfolder.'_login_string')) {
                 return true;
+            }
         }
 
         return false;
     }
 
     /**
-     * Retorna a ID do usuário autenticado
-     * @return integer ID do usuário
+     * Retorna a ID do usuário autenticado.
+     *
+     * @return int ID do usuário
      */
     public function getUserId(): int
     {
-        return $this->storage->get($this->subfolder . '_user_id');
+        return $this->storage->get($this->subfolder.'_user_id');
     }
 
     /**
-     * Retorna o role do usuário autenticado
+     * Retorna o role do usuário autenticado.
+     *
      * @return string Role do usuário
      */
     public function getUserRole(): string
     {
-        return $this->storage->get($this->subfolder . '_user_role');
+        return $this->storage->get($this->subfolder.'_user_role');
     }
 }

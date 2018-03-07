@@ -1,16 +1,19 @@
 <?php
+
 namespace HXPHP\System\Helpers\Menu;
 
 class CheckActive
 {
     /**
-     * Dependências
+     * Dependências.
+     *
      * @var object
      */
     private $realLink = null;
 
     /**
-     * URL atual
+     * URL atual.
+     *
      * @var string
      */
     private $current_URL = null;
@@ -22,20 +25,25 @@ class CheckActive
     }
 
     /**
-     * Verifica se o link está ativo
-     * @param  string $URL Link do menu
-     * @return bool        Status do link
+     * Verifica se o link está ativo.
+     *
+     * @param string $URL Link do menu
+     *
+     * @return bool Status do link
      */
     public function link(string $URL): bool
     {
         $position = strpos($this->current_URL, $URL);
+
         return $this->current_URL === $URL || ($position && $position > 0) ? true : false;
     }
 
     /**
-     * Verifica se algum link do dropdown está ativo
-     * @param  array $values Links do dropdown
-     * @return bool        	 Status do dropdown
+     * Verifica se algum link do dropdown está ativo.
+     *
+     * @param array $values Links do dropdown
+     *
+     * @return bool Status do dropdown
      */
     public function dropdown(array $values): bool
     {
@@ -50,6 +58,7 @@ class CheckActive
                 break;
             }
         }
+
         return $status;
     }
 }

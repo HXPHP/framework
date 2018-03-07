@@ -1,4 +1,5 @@
 <?php
+
 namespace HXPHP\System\Configs\Environments;
 
 use HXPHP\System\Configs\AbstractEnvironment;
