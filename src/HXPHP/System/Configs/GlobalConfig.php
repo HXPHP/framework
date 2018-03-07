@@ -2,8 +2,6 @@
 
 namespace HXPHP\System\Configs;
 
-use HXPHP\System\Http\Request;
-
 class GlobalConfig
 {
     public $site;
@@ -21,12 +19,13 @@ class GlobalConfig
         $this->controllers = new \stdClass();
 
         //Site
-        $request = new Request();
-        $https = $request->server('HTTPS');
+        if (array_key_exists('HTTP_HOST', $_SERVER)) {
+            $https = $_SERVER['HTTPS'];
 
-        $this->site->protocol = ($https && $https != 'off') ? 'https' : 'http';
-        $this->site->host = $request->server('HTTP_HOST');
-        $this->site->url = $this->site->protocol.'://'.$this->site->host;
+            $this->site->protocol = ($https && $https != 'off') ? 'https' : 'http';
+            $this->site->host = $_SERVER['HTTP_HOST'];
+            $this->site->url = $this->site->protocol . '://' . $this->site->host;
+        }
 
         //Models
         $this->models->directory = getenv('APP_PATH').'models'.DIRECTORY_SEPARATOR;

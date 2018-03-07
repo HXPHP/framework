@@ -1,12 +1,13 @@
 {
     "name": "hxphp/framework",
     "description": "HXPHP - O seu primeiro framework.",
-    "type": "project",
+    "type": "library",
     "homepage": "http://www.hxphp.com.br/",
     "keywords": ["framework", "hxphp"],
     "license": "MIT",
     "require": {
         "php": ">=7.0.0",
+        "symfony/http-foundation": "^4.0",
         "php-activerecord/php-activerecord": "*"
     },
     "require-dev": {

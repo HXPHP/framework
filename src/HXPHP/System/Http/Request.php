@@ -1,92 +1,23 @@
 <?php
-
 namespace HXPHP\System\Http;
 
-use HXPHP\System\Tools;
+use Symfony\Component\HttpFoundation\Request as SymfonyHttpFoundationRequest;
 
-class Request
+class Request extends SymfonyHttpFoundationRequest
 {
     /**
-     * Atributos.
-     *
-     * @var null
-     */
-    public $subfolder = '';
-    public $controller = 'IndexController';
-    public $action = 'indexAction';
-    public $params = [];
-
-    /**
-     * Filtros customizados de tratamento.
-     *
+     * Filtros customizados de tratamento
      * @var array
      */
     public $custom_filters = [];
 
-    /**
-     * Método construtor.
-     */
-    public function __construct(string $baseURI = '', string $controller_directory = '')
+    public function __construct(array $query = array(), array $request = array(), array $attributes = array(), array $cookies = array(), array $files = array(), array $server = array(), $content = null)
     {
-        $this->subfolder = 'default';
-        $this->initialize($baseURI, $controller_directory);
+        parent::__construct($query, $request, $attributes, $cookies, $files, $server, $content);
     }
 
     /**
-     * Define os parâmetros do mecanismo MVC.
-     *
-     * @return object Retorna o objeto com as propriedades definidas
-     */
-    public function initialize(string $baseURI, string $controller_directory)
-    {
-        if (!empty($baseURI)
-            && !empty($controller_directory) && array_key_exists('REQUEST_URI', $_SERVER)) {
-            $explode = array_values(array_filter(explode('/', $_SERVER['REQUEST_URI'])));
-
-            $baseURICount = count(array_filter(explode('/', $baseURI)));
-
-            if (count($explode) == $baseURICount) {
-                return $this;
-            }
-
-            if (count($explode) != $baseURICount) {
-                for ($i = 0; $i < $baseURICount; $i++) {
-                    unset($explode[$i]);
-                }
-
-                $explode = array_values($explode);
-            }
-
-            if (file_exists($controller_directory.$explode[0])) {
-                $this->subfolder = $explode[0];
-
-                if (isset($explode[1])) {
-                    $this->controller = Tools::filteredName($explode[1]).'Controller';
-                }
-
-                if (isset($explode[2])) {
-                    $this->action = lcfirst(Tools::filteredName($explode[2])).'Action';
-
-                    unset($explode[2]);
-                }
-            } elseif (count($explode) == 1) {
-                $this->controller = Tools::filteredName($explode[0]).'Controller';
-
-                return $this;
-            } else {
-                $this->controller = Tools::filteredName($explode[0]).'Controller';
-                $this->action = lcfirst(Tools::filteredName($explode[1])).'Action';
-            }
-
-            unset($explode[0], $explode[1]);
-
-            $this->params = array_values($explode);
-        }
-    }
-
-    /**
-     * Define filtros/flags customizados (http://php.net/manual/en/filter.filters.sanitize.php).
-     *
+     * Define filtros/flags customizados (http://php.net/manual/en/filter.filters.sanitize.php)
      * @param array $custom_filters Array com nome do campo e seu respectivo filtro
      */
     public function setCustomFilters(array $custom_filters = []): array
@@ -95,167 +26,128 @@ class Request
     }
 
     /**
-     * Realiza o tratamento das super globais.
-     *
-     * @param array $request        Array nativo com campos e valores passados
-     * @param const $data           Constante que será tratada
-     * @param array $custom_filters Filtros customizados para determinados campos
-     *
-     * @return array Constate tratada
+     * Realiza o tratamento das super globais
+     * @param  array|string $data    		  Dados que serão filtrados
+     * @return array|string                   Constate tratada
      */
-    public function filter(array $request, $data, array $custom_filters = [])
+    public function filter($data, $key = null)
     {
-        $filters = [];
+        $filters = $this->custom_filters;
 
-        foreach ($request as $key => $value) {
-            if (!array_key_exists($key, $custom_filters)) {
-                $filters[$key] = constant('FILTER_SANITIZE_STRING');
+        if (!is_null($key)) {
+            if (array_key_exists($key, $filters)) {
+                $filter = $filters[$key];
+
+                if (is_array($filter)) {
+                    $only_filter = $filter['filter'];
+                    $flags = array_key_exists('flags', $filter) ? $filter['flags'] : [];
+
+                    return filter_var($data, $only_filter, $flags);
+                }
+
+                return filter_var($data, $filter);
             }
+
+            return !is_null($data) ? filter_var($data, FILTER_SANITIZE_STRING) : $data;
         }
 
-        if (is_array($custom_filters) && is_array($custom_filters)) {
-            $filters = array_merge($filters, $custom_filters);
+        if (is_array($data) && !$key) {
+            foreach ($data as $key => $value) {
+                if (!array_key_exists($key, $filters)) {
+                    $filters[$key] = constant('FILTER_SANITIZE_STRING');
+                }
+            }
+
+            return filter_var_array($data, $filters);
         }
 
-        return filter_input_array($data, $filters);
+        return $data;
     }
 
     /**
-     * Obtém os dados enviados através do método GET.
-     *
-     * @param string $name Nome do parâmetro
-     *
-     * @return null Retorna o array GET geral ou em um índice específico
+     * Obtém os dados enviados através do método GET
+     * @param  string $name Nome do parâmetro
+     * @return null         Retorna o array GET geral ou em um índice específico
      */
-    public function get(string $name = null)
+    public function get($name = null, $default = null)
     {
-        $get = $this->filter($_GET, INPUT_GET, $this->custom_filters);
+        if ($name && !is_string($name)) {
+            return false;
+        }
 
         if (!$name) {
-            foreach ($get as $field => $value) {
-                $get[$field] = is_array($value) ? array_map('trim', $value) : trim($value);
-            }
-
-            return $get;
+            $data = $this->query->all();
+        }
+        else {
+            $data = $this->query->get($name, $default);
         }
 
-        if (!isset($get[$name])) {
-            return;
-        }
-
-        return trim($get[$name]);
+        return $this->filter($data, $name);
     }
 
     /**
-     * Obtém os dados enviados através do método POST.
-     *
-     * @param string $name Nome do parâmetro
-     *
-     * @return null Retorna o array POST geral ou em um índice específico
+     * Obtém os dados enviados através do método POST
+     * @param  string $name Nome do parâmetro
+     * @return null         Retorna o array POST geral ou em um índice específico
      */
     public function post(string $name = null)
     {
-        $post = $this->filter($_POST, INPUT_POST, $this->custom_filters);
-
-        if (!$name && $post) {
-            foreach ($post as $field => $value) {
-                $post[$field] = is_array($value) ? array_map('trim', $value) : trim($value);
-            }
-
-            return $post;
+        if ($name && !is_string($name)) {
+            return false;
         }
 
-        if (!isset($post[$name])) {
-            return;
+        if (!$name) {
+            $data = $this->request->all();
+        }
+        else {
+            $data = $this->request->get($name);
         }
 
-        return trim($post[$name]);
+        return $this->filter($data, $name);
     }
 
     /**
-     * Obtém os dados da superglobal $_SERVER.
-     *
-     * @param string $name Nome do parâmetro
-     *
-     * @return null Retorna o array $_SERVER geral ou em um índice específico
+     * Obtém os dados da superglobal $_SERVER
+     * @param  string $name Nome do parâmetro
+     * @return null         Retorna o array $_SERVER geral ou em um índice específico
      */
     public function server(string $name = null)
     {
-        $server = $this->filter($_SERVER, INPUT_SERVER, $this->custom_filters);
+        if ($name && !is_string($name)) {
+            return false;
+        }
 
         if (!$name) {
-            return $server;
+            return $this->server->all();
         }
-
-        if (!isset($server[$name]) && !isset($_SERVER[$name])) {
-            return;
-        }
-
-        if (is_null($server[$name])) {
-            return $_SERVER[$name];
-        }
-
-        if (!isset($server[$name])) {
-            return;
-        }
-
-        return $server[$name];
+        
+        return $this->server->get($name);
     }
 
     /**
-     * Obtém os dados da superglobal $_COOKIE.
-     *
+     * Obtém os dados da superglobal $_COOKIE
      * @param string $name Nome do parâmetro
-     *
      * @return null Retorna o array $_COOKIE geral ou em um índice específico
      */
     public function cookie(string $name = null)
     {
-        $cookie = $this->filter($_COOKIE, INPUT_COOKIE, $this->custom_filters);
+        if ($name && !is_string($name)) {
+            return false;
+        }
 
         if (!$name) {
-            return $cookie;
+            $data = $this->cookies->all();
+        }
+        else {
+            $data = $this->cookies->get($name);
         }
 
-        if (!isset($cookie[$name])) {
-            return;
-        }
-
-        return $cookie[$name];
+        return $this->filter($data, $name);
     }
 
     /**
-     * Retorna o método da requisição.
-     *
-     * @param string $value Nome do método
-     *
-     * @return null Retorna um booleano ou o método em si
-     */
-    public function getMethod(string $value = null)
-    {
-        $method = $_SERVER['REQUEST_METHOD'];
-
-        if ($value) {
-            return $method == $value;
-        }
-
-        return $method;
-    }
-
-    /**
-     * Verifica se o método da requisição é POST.
-     *
-     * @return bool Status da verificação
-     */
-    public function isPost(): bool
-    {
-        return $this->getMethod('POST');
-    }
-
-    /**
-     * Verifica se o método da requisição é GET.
-     *
-     * @return bool Status da verificação
+     * Verifica se o método da requisição é GET
+     * @return boolean Status da verificação
      */
     public function isGet(): bool
     {
@@ -263,9 +155,17 @@ class Request
     }
 
     /**
-     * Verifica se o método da requisição é PUT.
-     *
-     * @return bool Status da verificação
+     * Verifica se o método da requisição é POST
+     * @return boolean Status da verificação
+     */
+    public function isPost(): bool
+    {
+        return $this->getMethod('POST');
+    }
+
+    /**
+     * Verifica se o método da requisição é PUT
+     * @return boolean Status da verificação
      */
     public function isPut(): bool
     {
@@ -273,9 +173,17 @@ class Request
     }
 
     /**
-     * Verifica se o método da requisição é HEAD.
-     *
-     * @return bool Status da verificação
+     * Verifica se o método da requisição é DELETE
+     * @return boolean Status da verificação
+     */
+    public function isDelete(): bool
+    {
+        return $this->getMethod('DELETE');
+    }
+
+    /**
+     * Verifica se o método da requisição é HEAD
+     * @return boolean Status da verificação
      */
     public function isHead(): bool
     {
@@ -283,9 +191,9 @@ class Request
     }
 
     /**
-     * Verifica se os inputs no método requisitado estão no formato correto conforme o array informado $custom_filters.
+     * Verifica se os inputs no método requisitado estão no formato correto conforme o array informado $custom_filters
      *
-     * @return bool Inputs estão corretos ou não
+     * @return boolean Inputs estão corretos ou não
      */
     public function isValid(): bool
     {
