@@ -2,8 +2,8 @@
 
 namespace Tests\System\Http;
 
-use Symfony\Component\HttpFoundation\Request as SymfonyHttpFoundationRequest;
 use HXPHP\System\Http\Request;
+use Symfony\Component\HttpFoundation\Request as SymfonyHttpFoundationRequest;
 use Tests\BaseTestCase;
 
 final class RequestTest extends BaseTestCase
@@ -15,12 +15,12 @@ final class RequestTest extends BaseTestCase
         parent::setUp();
 
         SymfonyHttpFoundationRequest::setFactory(function (
-            array $query = array(),
-            array $request = array(),
-            array $attributes = array(),
-            array $cookies = array(),
-            array $files = array(),
-            array $server = array(),
+            array $query = [],
+            array $request = [],
+            array $attributes = [],
+            array $cookies = [],
+            array $files = [],
+            array $server = [],
             $content = null
         ) {
             return new Request(
@@ -56,15 +56,15 @@ final class RequestTest extends BaseTestCase
             'GET',
             [
                 'invalid_integer_field' => 'string instead of integer',
-                'valid_integer_field' => '2018',
-                'email_field' => 'invalid email',
+                'valid_integer_field'   => '2018',
+                'email_field'           => 'invalid email',
             ]
         );
 
         $request->setCustomFilters([
             'invalid_integer_field' => FILTER_SANITIZE_NUMBER_INT,
-            'valid_integer_field' => FILTER_SANITIZE_NUMBER_INT,
-            'email_field' => FILTER_VALIDATE_EMAIL,
+            'valid_integer_field'   => FILTER_SANITIZE_NUMBER_INT,
+            'email_field'           => FILTER_VALIDATE_EMAIL,
         ]);
 
         $this->assertNotEmpty($request->custom_filters);
@@ -76,25 +76,25 @@ final class RequestTest extends BaseTestCase
             '/',
             'GET',
             [
-                'invalid_integer_field' => 'string instead of integer',
-                'valid_integer_field' => '2018',
-                'email_field' => 'invalid email',
-                'allowed_html_field' => '<strong>Allowed</strong>',
-                'invalid_html_field' => '<script></script>',
+                'invalid_integer_field'  => 'string instead of integer',
+                'valid_integer_field'    => '2018',
+                'email_field'            => 'invalid email',
+                'allowed_html_field'     => '<strong>Allowed</strong>',
+                'invalid_html_field'     => '<script></script>',
                 'multiple_integer_field' => ['value1', 'value2'],
             ]
         );
 
         $request->setCustomFilters([
             'invalid_integer_field' => FILTER_SANITIZE_NUMBER_INT,
-            'valid_integer_field' => FILTER_SANITIZE_NUMBER_INT,
-            'email_field' => FILTER_VALIDATE_EMAIL,
-            'allowed_html_field' => [
+            'valid_integer_field'   => FILTER_SANITIZE_NUMBER_INT,
+            'email_field'           => FILTER_VALIDATE_EMAIL,
+            'allowed_html_field'    => [
                 'filter' => FILTER_UNSAFE_RAW,
             ],
             'multiple_integer_field' => [
                 'filter' => FILTER_SANITIZE_NUMBER_INT,
-                'flags' => FILTER_FORCE_ARRAY,
+                'flags'  => FILTER_FORCE_ARRAY,
             ],
         ]);
 
@@ -221,15 +221,15 @@ final class RequestTest extends BaseTestCase
             'GET',
             [
                 'invalid_integer_field' => 'string instead of integer',
-                'valid_integer_field' => '2018',
-                'email_field' => 'invalid email',
+                'valid_integer_field'   => '2018',
+                'email_field'           => 'invalid email',
             ]
         );
 
         $request->setCustomFilters([
             'invalid_integer_field' => FILTER_VALIDATE_INT,
-            'valid_integer_field' => FILTER_VALIDATE_INT,
-            'email_field' => FILTER_VALIDATE_EMAIL,
+            'valid_integer_field'   => FILTER_VALIDATE_INT,
+            'email_field'           => FILTER_VALIDATE_EMAIL,
         ]);
 
         $this->assertFalse($request->isValid());

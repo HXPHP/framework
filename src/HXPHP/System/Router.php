@@ -31,7 +31,7 @@ class Router
             }
 
             if (count($explode) != $baseURICount) {
-                for ($i = 0; $i < $baseURICount; ++$i) {
+                for ($i = 0; $i < $baseURICount; $i++) {
                     unset($explode[$i]);
                 }
 

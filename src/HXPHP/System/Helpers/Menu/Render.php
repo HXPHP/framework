@@ -56,7 +56,7 @@ class Render
         $i = 0;
 
         foreach ($menu_itens as $key => $value) {
-            ++$i;
+            $i++;
             $menu_data = MenuData::get($key);
             $real_link = $this->realLink->get($value);
 

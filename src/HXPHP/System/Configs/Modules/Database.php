@@ -19,12 +19,12 @@ class Database
     public function __construct()
     {
         $this->setConnectionData([
-            'driver' => 'mysql',
-            'host' => 'localhost',
-            'user' => 'root',
+            'driver'   => 'mysql',
+            'host'     => 'localhost',
+            'user'     => 'root',
             'password' => '',
-            'dbname' => 'hxphp',
-            'charset' => 'utf8',
+            'dbname'   => 'hxphp',
+            'charset'  => 'utf8',
         ]);
     }
 

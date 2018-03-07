@@ -46,7 +46,7 @@ class Tools
         $password = hash('sha512', $password.$salt);
 
         return [
-            'salt' => $salt,
+            'salt'     => $salt,
             'password' => $password,
         ];
     }

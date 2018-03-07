@@ -43,7 +43,7 @@ class Core
 
     protected $assets = [
         'css' => [],
-        'js' => [],
+        'js'  => [],
     ];
 
     public function setConfigs(Config $configs, string $subfolder, string $controller, string $action)
@@ -74,12 +74,12 @@ class Core
 
         $default_values = [
             'partialsDir' => 'partials',
-            'path' => $controller,
-            'template' => true,
-            'header' => 'header',
-            'file' => $action,
-            'footer' => 'footer',
-            'title' => $this->configs->title,
+            'path'        => $controller,
+            'template'    => true,
+            'header'      => 'header',
+            'file'        => $action,
+            'footer'      => 'footer',
+            'title'       => $this->configs->title,
         ];
 
         foreach ($default_values as $setting => $value) {
@@ -335,9 +335,9 @@ class Core
         $viewFile = $this->partialsDir.'_'.$view.$viewsExt;
 
         if (!file_exists($viewFile)) {
-            throw new \Exception("Erro fatal: A view <'$viewFile'> não foi encontrada. Por favor, crie a view e tente novamente.", 1 );
+            throw new \Exception("Erro fatal: A view <'$viewFile'> não foi encontrada. Por favor, crie a view e tente novamente.", 1);
         }
-        require($viewFile);
+        require $viewFile;
     }
 
     public function getRelativeURL(string $URL, bool $controller = true): string
