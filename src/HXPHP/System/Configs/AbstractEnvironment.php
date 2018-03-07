@@ -20,32 +20,34 @@ abstract class AbstractEnvironment
 
     public function registerModule(string $type, string $module, string $name = null)
     {
-        switch ($type){
+        switch ($type) {
             case 'local':
                 $module_class = Tools::filteredName(ucwords($module));
 
-                if($name){
+                if ($name) {
                     $module = $name;
                 }
 
-                if (!class_exists($module_class))
+                if (!class_exists($module_class)) {
                     throw new \Exception("O modulo local <'$module_class'> informado nao existe.", 1);
-                else
+                } else {
                     $this->$module = new $module_class();
+                }
 
                 break;
             case 'composer':
                 $module_class = Tools::filteredName(ucwords($module));
                 $object = $module_class.'\src\Config';
 
-                if($name){
+                if ($name) {
                     $module = $name;
                 }
 
-                if (!class_exists($object))
+                if (!class_exists($object)) {
                     throw new \Exception("O modulo composer <'$object'> informado nao existe.", 1);
-                else
+                } else {
                     $this->$module = new $object();
+                }
                 break;
         }
 
@@ -54,17 +56,17 @@ abstract class AbstractEnvironment
 
     public function registerModules(array $modules)
     {
-        foreach ($modules as $module => $info){
+        foreach ($modules as $module => $info) {
             $type = $info['type'] ?? '';
             $name = $info['name'] ?? '';
 
-            if(empty($type)){
+            if (empty($type)) {
                 continue;
             }
 
-            $data = [$type,$module,$name];
+            $data = [$type, $module, $name];
 
-            call_user_func_array([$this,'registerModule'],$data);
+            call_user_func_array([$this, 'registerModule'], $data);
         }
     }
 }
