@@ -22,7 +22,6 @@ class Cell
     public function __construct($cell, $elements, $tag)
     {
         if (is_array($cell)) {
-
             //O primeiro elemento é sempre o conteúdo da célula
             $this->content = array_shift($cell);
 

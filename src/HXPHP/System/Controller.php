@@ -1,4 +1,5 @@
 <?php
+
 namespace HXPHP\System;
 
 use HXPHP\System\Configs\Config;

@@ -5,9 +5,13 @@ namespace HXPHP\System\Configs;
 class GlobalConfig
 {
     public $site;
+
     public $models;
+
     public $views;
+
     public $controllers;
+
     public $title;
 
     public function __construct()
@@ -22,9 +26,9 @@ class GlobalConfig
         if (array_key_exists('HTTP_HOST', $_SERVER)) {
             $https = $_SERVER['HTTPS'];
 
-            $this->site->protocol = ($https && $https != 'off') ? 'https' : 'http';
+            $this->site->protocol = ($https && 'off' != $https) ? 'https' : 'http';
             $this->site->host = $_SERVER['HTTP_HOST'];
-            $this->site->url = $this->site->protocol . '://' . $this->site->host;
+            $this->site->url = $this->site->protocol.'://'.$this->site->host;
         }
 
         //Models

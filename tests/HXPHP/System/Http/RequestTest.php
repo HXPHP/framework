@@ -1,4 +1,5 @@
 <?php
+
 namespace Tests\System\Http;
 
 use Symfony\Component\HttpFoundation\Request as SymfonyHttpFoundationRequest;
@@ -7,13 +8,13 @@ use Tests\BaseTestCase;
 
 final class RequestTest extends BaseTestCase
 {
-	protected $request;
+    protected $request;
 
-	public function setUp()
-	{
-		parent::setUp();
+    public function setUp()
+    {
+        parent::setUp();
 
-		SymfonyHttpFoundationRequest::setFactory(function (
+        SymfonyHttpFoundationRequest::setFactory(function (
             array $query = array(),
             array $request = array(),
             array $attributes = array(),
@@ -33,204 +34,204 @@ final class RequestTest extends BaseTestCase
             );
         });
 
-		$this->request = Request::createFromGlobals();
-	}
+        $this->request = Request::createFromGlobals();
+    }
 
-	public function testGetMethodFunction(): void
-	{
-		$request = $this->request->create(
-			'/',
-			'POST'
-		);
-		
-		$method = $request->getMethod();
+    public function testGetMethodFunction(): void
+    {
+        $request = $this->request->create(
+            '/',
+            'POST'
+        );
 
-		$this->assertEquals("POST", $method);
-	}	
+        $method = $request->getMethod();
 
-	public function testSetCustomFiltersFunction(): void
-	{
-		$request = $this->request->create(
-			'/',
-			'GET',
-			[
-				'invalid_integer_field' => 'string instead of integer',
-				'valid_integer_field' => '2018',
-				'email_field' => 'invalid email'
-			]
-		);
+        $this->assertEquals('POST', $method);
+    }
 
-		$request->setCustomFilters([
-			'invalid_integer_field' => FILTER_SANITIZE_NUMBER_INT,
-			'valid_integer_field' => FILTER_SANITIZE_NUMBER_INT,
-			'email_field' => FILTER_VALIDATE_EMAIL
-		]);
+    public function testSetCustomFiltersFunction(): void
+    {
+        $request = $this->request->create(
+            '/',
+            'GET',
+            [
+                'invalid_integer_field' => 'string instead of integer',
+                'valid_integer_field' => '2018',
+                'email_field' => 'invalid email',
+            ]
+        );
 
-		$this->assertNotEmpty($request->custom_filters);
-	}
+        $request->setCustomFilters([
+            'invalid_integer_field' => FILTER_SANITIZE_NUMBER_INT,
+            'valid_integer_field' => FILTER_SANITIZE_NUMBER_INT,
+            'email_field' => FILTER_VALIDATE_EMAIL,
+        ]);
 
-	public function testFilterFunction(): void
-	{
-		$request = $this->request->create(
-			'/',
-			'GET',
-			[
-				'invalid_integer_field' => 'string instead of integer',
-				'valid_integer_field' => '2018',
-				'email_field' => 'invalid email',
-				'allowed_html_field' => '<strong>Allowed</strong>',
-				'invalid_html_field' => '<script></script>',
-				'multiple_integer_field' => ['value1', 'value2']
-			]
-		);
+        $this->assertNotEmpty($request->custom_filters);
+    }
 
-		$request->setCustomFilters([
-			'invalid_integer_field' => FILTER_SANITIZE_NUMBER_INT,
-			'valid_integer_field' => FILTER_SANITIZE_NUMBER_INT,
-			'email_field' => FILTER_VALIDATE_EMAIL,
-			'allowed_html_field' => [
-				'filter' => FILTER_UNSAFE_RAW
-			],
-			'multiple_integer_field' => [
-				'filter' => FILTER_SANITIZE_NUMBER_INT,
-				'flags' => FILTER_FORCE_ARRAY
-			]
-		]);
+    public function testFilterFunction(): void
+    {
+        $request = $this->request->create(
+            '/',
+            'GET',
+            [
+                'invalid_integer_field' => 'string instead of integer',
+                'valid_integer_field' => '2018',
+                'email_field' => 'invalid email',
+                'allowed_html_field' => '<strong>Allowed</strong>',
+                'invalid_html_field' => '<script></script>',
+                'multiple_integer_field' => ['value1', 'value2'],
+            ]
+        );
 
-		$this->assertEmpty($request->get('invalid_integer_field'));
-		$this->assertEquals(2018, $request->get('valid_integer_field'));
-		$this->assertFalse($request->get('email_field'));
-		$this->assertEquals('<strong>Allowed</strong>', $request->get('allowed_html_field'));
-		$this->assertEmpty($request->get('invalid_html_field'));
-		$this->assertEquals([1, 2], $request->get('multiple_integer_field'));
-	}	
+        $request->setCustomFilters([
+            'invalid_integer_field' => FILTER_SANITIZE_NUMBER_INT,
+            'valid_integer_field' => FILTER_SANITIZE_NUMBER_INT,
+            'email_field' => FILTER_VALIDATE_EMAIL,
+            'allowed_html_field' => [
+                'filter' => FILTER_UNSAFE_RAW,
+            ],
+            'multiple_integer_field' => [
+                'filter' => FILTER_SANITIZE_NUMBER_INT,
+                'flags' => FILTER_FORCE_ARRAY,
+            ],
+        ]);
 
-	public function testGetFunction(): void
-	{
-		$request = $this->request->create(
-			'/',
-			'GET',
-			[
-				'hello' => 'world'
-			]
-		);
+        $this->assertEmpty($request->get('invalid_integer_field'));
+        $this->assertEquals(2018, $request->get('valid_integer_field'));
+        $this->assertFalse($request->get('email_field'));
+        $this->assertEquals('<strong>Allowed</strong>', $request->get('allowed_html_field'));
+        $this->assertEmpty($request->get('invalid_html_field'));
+        $this->assertEquals([1, 2], $request->get('multiple_integer_field'));
+    }
 
-		$hello = $request->get('hello');
-		$this->assertEquals("world", $hello);
+    public function testGetFunction(): void
+    {
+        $request = $this->request->create(
+            '/',
+            'GET',
+            [
+                'hello' => 'world',
+            ]
+        );
 
-		$all_params = $request->get();
-		$this->assertInternalType("array", $all_params);
+        $hello = $request->get('hello');
+        $this->assertEquals('world', $hello);
 
-		$not_exists = $request->get('not_exists');
-		$this->assertNull($not_exists);
+        $all_params = $request->get();
+        $this->assertInternalType('array', $all_params);
 
-		$type_error = $request->get(['something']);
-		$this->assertFalse($type_error);
-	}
+        $not_exists = $request->get('not_exists');
+        $this->assertNull($not_exists);
 
-	public function testPostFunction(): void
-	{
-		$request = $this->request->create(
-			'/',
-			'POST',
-			[
-				'hello' => 'world'
-			]
-		);
+        $type_error = $request->get(['something']);
+        $this->assertFalse($type_error);
+    }
 
-		$hello = $request->post('hello');
-		$this->assertEquals("world", $hello);
+    public function testPostFunction(): void
+    {
+        $request = $this->request->create(
+            '/',
+            'POST',
+            [
+                'hello' => 'world',
+            ]
+        );
 
-		$all_params = $request->post();
-		$this->assertInternalType("array", $all_params);
+        $hello = $request->post('hello');
+        $this->assertEquals('world', $hello);
 
-		$not_exists = $request->post('not_exists');
-		$this->assertNull($not_exists);
-	}
+        $all_params = $request->post();
+        $this->assertInternalType('array', $all_params);
 
-	public function testServerFunction(): void
-	{
-		$this->assertNotEmpty($this->request->server('SCRIPT_FILENAME'));
+        $not_exists = $request->post('not_exists');
+        $this->assertNull($not_exists);
+    }
 
-		$all_params = $this->request->server();
-		$this->assertTrue(is_array($all_params) && !empty($all_params));
-	}
+    public function testServerFunction(): void
+    {
+        $this->assertNotEmpty($this->request->server('SCRIPT_FILENAME'));
 
-	public function testCookieFunction(): void
-	{
-		$request = $this->request->cookies->add(['foo' => 'bar']);
+        $all_params = $this->request->server();
+        $this->assertTrue(is_array($all_params) && !empty($all_params));
+    }
 
-		$this->assertEquals('bar', $this->request->cookie('foo'));
-	}
+    public function testCookieFunction(): void
+    {
+        $request = $this->request->cookies->add(['foo' => 'bar']);
 
-	public function testIsGetFunction(): void
-	{
-		$request = $this->request->create(
-			'/',
-			'GET'
-		);
-		
-		$this->assertTrue($request->isGet());
-	}
+        $this->assertEquals('bar', $this->request->cookie('foo'));
+    }
 
-	public function testIsPostFunction(): void
-	{
-		$request = $this->request->create(
-			'/',
-			'POST'
-		);
-		
-		$this->assertTrue($request->isPost());
-	}
+    public function testIsGetFunction(): void
+    {
+        $request = $this->request->create(
+            '/',
+            'GET'
+        );
 
-	public function testIsPutFunction(): void
-	{
-		$request = $this->request->create(
-			'/',
-			'PUT'
-		);
-		
-		$this->assertTrue($request->isPut());
-	}
+        $this->assertTrue($request->isGet());
+    }
 
-	public function testIsDeleteFunction(): void
-	{
-		$request = $this->request->create(
-			'/',
-			'DELETE'
-		);
-		
-		$this->assertTrue($request->isDelete());
-	}
+    public function testIsPostFunction(): void
+    {
+        $request = $this->request->create(
+            '/',
+            'POST'
+        );
 
-	public function testIsHeadFunction(): void
-	{
-		$request = $this->request->create(
-			'/',
-			'HEAD'
-		);
-		
-		$this->assertTrue($request->isHead());
-	}
+        $this->assertTrue($request->isPost());
+    }
 
-	public function testIsValidFunction(): void
-	{
-		$request = $this->request->create(
-			'/',
-			'GET',
-			[
-				'invalid_integer_field' => 'string instead of integer',
-				'valid_integer_field' => '2018',
-				'email_field' => 'invalid email'
-			]
-		);
+    public function testIsPutFunction(): void
+    {
+        $request = $this->request->create(
+            '/',
+            'PUT'
+        );
 
-		$request->setCustomFilters([
-			'invalid_integer_field' => FILTER_VALIDATE_INT,
-			'valid_integer_field' => FILTER_VALIDATE_INT,
-			'email_field' => FILTER_VALIDATE_EMAIL
-		]);
+        $this->assertTrue($request->isPut());
+    }
 
-		$this->assertFalse($request->isValid());
-	}
+    public function testIsDeleteFunction(): void
+    {
+        $request = $this->request->create(
+            '/',
+            'DELETE'
+        );
+
+        $this->assertTrue($request->isDelete());
+    }
+
+    public function testIsHeadFunction(): void
+    {
+        $request = $this->request->create(
+            '/',
+            'HEAD'
+        );
+
+        $this->assertTrue($request->isHead());
+    }
+
+    public function testIsValidFunction(): void
+    {
+        $request = $this->request->create(
+            '/',
+            'GET',
+            [
+                'invalid_integer_field' => 'string instead of integer',
+                'valid_integer_field' => '2018',
+                'email_field' => 'invalid email',
+            ]
+        );
+
+        $request->setCustomFilters([
+            'invalid_integer_field' => FILTER_VALIDATE_INT,
+            'valid_integer_field' => FILTER_VALIDATE_INT,
+            'email_field' => FILTER_VALIDATE_EMAIL,
+        ]);
+
+        $this->assertFalse($request->isValid());
+    }
 }

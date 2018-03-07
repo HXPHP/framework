@@ -5,7 +5,9 @@ namespace HXPHP\System\Configs;
 class Config extends Bootstrap
 {
     public $global;
+
     public $env;
+
     public $define;
 
     public function __construct()
