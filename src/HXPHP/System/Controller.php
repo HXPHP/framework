@@ -15,9 +15,11 @@ class Controller extends Core
     public function load()
     {
         $total_args = func_num_args();
+
         if (!$total_args) {
             throw new \Exception('Nenhum objeto foi definido para ser carregado.', 1);
         }
+
         /**
          * Retorna todos os argumentos e define o primeiro como
          * o objeto que será injetado.
@@ -25,7 +27,9 @@ class Controller extends Core
          * @var array
          */
         $args = func_get_args();
+
         $type = $args[0];
+
         if (!in_array($type, ['hxphp', 'composer', 'local'])) {
             $type = 'hxphp';
             $object = $args[0];
@@ -35,17 +39,21 @@ class Controller extends Core
             unset($args[0]);
             unset($args[1]);
         }
+
         $args = array_values($args);
         $moduleName = null;
+
         if (isset($args[0]['name'])) {
             $moduleName = $args[0]['name'];
             unset($args[0]);
             $args = array_values($args);
         }
+
         /**
          * Tratamento que adiciona a pasta do módulo.
          */
         $explode = explode('\\', $object);
+
         if ($type === 'hxphp') {
             $object = 'HXPHP\System\\'.$object;
             $object = $object.'\\'.end($explode);
@@ -53,6 +61,7 @@ class Controller extends Core
                 $moduleName = end($explode);
             }
         }
+
         if ($type === 'composer') {
             if (count($explode) == 1) {
                 $module = $explode[0];
@@ -67,6 +76,7 @@ class Controller extends Core
                 }
             }
         }
+
         if ($type === 'local') {
             if (count($explode) == 1) {
                 $module = $explode[0];
@@ -81,18 +91,19 @@ class Controller extends Core
                 }
             }
         }
+
         /**
          * Define os demais argumentos passados como
          * parâmetros para o construtor do objeto injetado.
          */
         $params = !($args) ? [] : array_values($args);
+
         if (class_exists($object)) {
             $name = end($explode);
             $name = strtolower(Tools::filteredName($name));
             $enviroment = $this->configs->define->getDefault();
 
             if ($params) {
-                var_dump($params);
                 $ref = new \ReflectionClass($object);
                 $this->view->$name = $ref->newInstanceArgs($params);
             } else {
