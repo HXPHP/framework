@@ -1,133 +1,185 @@
 <?php
 
-namespace HXPHP\System\View;
+namespace HXPHP\System\Controller;
 
-use HXPHP\System\Configs\AbstractEnvironment;
-use HXPHP\System\Configs\Config;
-use HXPHP\System\Configs\Modules\Views;
+use HXPHP\System\{
+    View, Configs\Config, Http\Request, Http\Response, Loader, Router
+};
+use Symfony\Component\HttpFoundation\Request as SymfonyHttpFoundationRequest;
 
+/**
+ * Class Core
+ * @package HXPHP\System\Controller
+ *
+ * @property View\Core $view
+ * @property Response $response
+ * @property Config $configs
+ * @property Loader $loader
+ * @property Request $request
+ * @property Router $router
+ */
 class Core
 {
-    use ViewMethods;
-
-    /**
-     * Título da página.
-     *
-     * @var string
-     */
-    public $title = '';
-
     /**
      * Injeção das Configurações.
      *
+     * @var Config
+     */
+    public $configs = null;
+
+    /**
+     * Injeção do Http Request.
+     *
      * @var object
      */
-    private $configs;
+    public $request;
 
     /**
-     * @var ViewTemplate
-     */
-    public $template;
-
-    /**
-     * @var ViewAssets
-     */
-    private $assets;
-
-    /**
-     * @var ViewPartial
-     */
-    private $partial;
-
-    public function __construct(Config $configs)
-    {
-        $this->configs = $configs;
-
-        $this->template = new ViewTemplate($configs);
-        $this->assets   = new ViewAssets($configs);
-        $this->partial  = new ViewPartial($configs);
-    }
-
-    public function setConfigs(Config $configs, string $subfolder, string $controller, string $action)
-    {
-        /*
-         * Injeção das Configurações
-         * @var object
-         */
-        $this->configs = $configs;
-
-        /** @var AbstractEnvironment $env */
-        $env = $configs->getCurrentEnv();
-
-        /** @var Views $viewConfig */
-        $viewConfig = $configs->env->$env->views;
-
-        /*
-         * Subfolder
-         * @var mixed
-         */
-        $this->subfolder = $subfolder;
-
-        /**
-         * Tratamento das variáveis.
-         */
-        $controller = strtolower(str_replace('Controller', '', $controller));
-        $action = ($controller == $configs->controllers->notFound ? 'indexAction' : $action);
-        $action = str_replace('Action', '', $action);
-
-        $this->partial->setPartialsDir($viewConfig->getPartialsDir());
-
-        $this->template->setSubfolder($subfolder)
-            ->setTemplate($viewConfig->isTemplate())
-            ->setTemplateParts($viewConfig->getTemplateTree())
-            ->setTemplateTreeOrder($viewConfig->getTemplateTreeOrder())
-            ->setPath($controller)
-            ->setFile($action)
-            ->setTitle($viewConfig->getTitle());
-    }
-
-    /**
-     * Renderiza a VIEW.
+     * Injeção do Http Response.
      *
-     * @param string $view Nome do arquivo, sem extensão, a ser utilizado como VIEW
+     * @var object
      */
-    public function flush()
+    private $response;
+
+    /**
+     * Injeção da View.
+     *
+     * @var object
+     */
+    public $view;
+
+    public function __construct(Config $configs = null)
     {
+        /** @var Loader $loader */
+        $loader         = Loader::getLoadedStatic('Loader');
 
-        /** @var AbstractEnvironment $env */
-        $env = $this->configs->getCurrentEnv();
+        if(!$configs){
+            $configs    = $loader->getLoaded('Config');
+        }
 
-        /** @var Views $viewConfig */
-        $viewConfig = $this->configs->env->$env->views;
+        //Injeção da VIEW
+        $this->view     = $loader->load('core','View\Core',['name' => 'view'], $configs);
+        $this->response = $loader->getLoaded('Http\Response');
 
-        $template   = $this->template;
-        $assets     = $this->assets;
+        $this->setConfigs($configs);
+    }
 
-        $default_data = [
-            'title' => $template->getTitle(),
-        ];
+    /**
+     * Injeta as configurações.
+     *
+     * @param Config $configs Objeto com as configurações da aplicação
+     *
+     * @return object
+     */
+    public function setConfigs(Config $configs): self
+    {
+        //Injeção das dependências
+        $this->configs = $configs;
 
-        //Inclusão de ASSETS
-        $add_css = $assets->assets('css', $assets->getAssets('css'));
-        $add_js = $assets->assets('js', $assets->getAssets('js'));
+        SymfonyHttpFoundationRequest::setFactory(function (
+            array $query = [],
+            array $request = [],
+            array $attributes = [],
+            array $cookies = [],
+            array $files = [],
+            array $server = [],
+            $content = null
+        ) {
+            return new Request(
+                $query,
+                $request,
+                $attributes,
+                $cookies,
+                $files,
+                $server,
+                $content
+            );
+        });
 
-        $data = array_merge($default_data, ['js' => $add_js, 'css' => $add_css]);
 
-        $template->setVars($data);
+        $this->request = Request::createFromGlobals();
 
-        //Variáveis
-        $baseURI = $this->configs->baseURI;
+        Loader::addLoadedInstanceStatic('Request',['object' => $this->request]);
 
-        //Atribuição das constantes
-        define('BASE', $baseURI);
-        define('ASSETS', $baseURI.'public/assets/');
-        define('BOWER', $baseURI.'public/bower_components/');
-        define('IMG', $baseURI.'public/img/');
-        define('CSS', $baseURI.'public/css/');
-        define('JS', $baseURI.'public/js/');
+        return $this;
+    }
 
-        $loadTemplate = new LoadTemplate($template, $viewConfig, $this->partial);
-        $loadTemplate->load();
+    /**
+     * Default Action.
+     */
+    public function indexAction()
+    {
+    }
+
+    /**
+     * Carrega serviços, módulos e helpers.
+     *
+     * @param string       $object Nome da classe
+     * @param string|array $params Parâmetros do método construtor
+     *
+     * @return object Objeto injetado
+     */
+    public function load()
+    {
+        $loader = Loader::getLoadedStatic('Loader');
+        $classLoaded = call_user_func_array([$loader,'load'],array_merge([true],func_get_args()));
+
+        $name = strtolower($classLoaded['name']);
+        $this->$name = $classLoaded['object'];
+
+        return $classLoaded['object'];
+    }
+
+    public function getLoaderClass(string $load = '')
+    {
+        return Loader::getLoadedStatic($load);
+    }
+
+    /**
+     * Método mágico para atalho de objetos injetados na VIEW.
+     *
+     * @param string $param Atributo
+     *
+     * @return mixed Conteúdo do atributo ou Exception
+     */
+    public function __get(string $param)
+    {
+        if (isset($this->view->$param)) {
+            return $this->view->$param;
+        } elseif (isset($this->$param)) {
+            return $this->$param;
+        } else {
+            throw new \Exception("Parametro <$param> nao encontrado.", 1);
+        }
+    }
+
+    /**
+     * Método que retorna o caminho relativo.
+     *
+     * @param string $URL        Geralmente a action e parâmetros
+     * @param bool   $controller Define se o controller também será retornado
+     *
+     * @return string Link relativo
+     */
+    public function getRelativeURL(string $URL, bool $controller = true): string
+    {
+        $path = true === $controller ? $this->view->template->getPath().DIRECTORY_SEPARATOR : $this->view->template->getSubfolder();
+
+        return $this->configs->baseURI.$path.$URL;
+    }
+
+    /**
+     * Redirecionamento.
+     *
+     * @param string $URL        Link de redirecionamento
+     * @param bool   $external   Define se o redirecionamento será relativo ou absoluto
+     * @param bool   $controller Define se o controller também será retornado
+     */
+    public function redirectTo(string $URL, bool $external = true, bool $controller = true)
+    {
+        $URL = false === $external ? $this->getRelativeURL($URL, $controller) : $URL;
+
+        $this->response->redirectTo($URL);
     }
 
 }
