@@ -24,7 +24,7 @@ class GlobalConfig
 
         //Site
         if (array_key_exists('HTTP_HOST', $_SERVER)) {
-            $https = $_SERVER['HTTPS'];
+            $https = $_SERVER['HTTPS'] ?? 'off';
 
             $this->site->protocol = ($https && 'off' != $https) ? 'https' : 'http';
             $this->site->host = $_SERVER['HTTP_HOST'];

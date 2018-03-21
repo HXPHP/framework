@@ -2,24 +2,38 @@
 
 namespace HXPHP\System\Configs;
 
+use HXPHP\System\Configs\Environments\{
+    Development,
+    Production,
+    Tests
+};
 use HXPHP\System\Tools;
 
+/**
+ * Class Environment
+ * @package HXPHP\System\Configs
+ *
+ * @property Development $development
+ * @property Tests $tests
+ * @property Production $production
+ */
 class Environment
 {
     public $defaultEnvironment;
 
-    public function __construct()
-    {
-        $define = new DefineEnvironment();
-        $this->defaultEnvironment = $define->getDefault();
+    private $defineEnvironment;
 
+    public function __construct(DefineEnvironment $env)
+    {
+        $this->defineEnvironment = $env;
         $this->add();
     }
 
     public function add(string $environment = null)
     {
-        if (!$environment) {
-            $environment = $this->defaultEnvironment;
+        if (!$environment)
+        {
+            $environment = $this->defaultEnvironment = $this->defineEnvironment->getDefault();
         }
 
         $name = strtolower(Tools::filteredName($environment));

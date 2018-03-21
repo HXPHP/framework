@@ -63,5 +63,8 @@ class Router
 
             $this->params = array_values($explode);
         }
+
+        return null;
     }
+
 }

@@ -3,7 +3,20 @@
 namespace HXPHP\System\Configs;
 
 use HXPHP\System\Tools;
+use HXPHP\System\Configs\Modules\{
+    Auth, Mail, Menu, Database, Views
+};
 
+/**
+ * Class AbstractEnvironment
+ * @package HXPHP\System\Configs
+ *
+ * @property Auth $auth
+ * @property Mail $mail
+ * @property Menu $menu
+ * @property Database $database
+ * @property Views $views
+ */
 abstract class AbstractEnvironment
 {
     public $baseURI;
@@ -12,10 +25,7 @@ abstract class AbstractEnvironment
     {
         //Configurações variáveis por ambiente
         $this->baseURI = '/';
-
-        $load = new LoadModules();
-
-        return $load->loadModules($this);
+        return $this->loadModules();
     }
 
     public function registerModule(string $type, string $module, string $name = null)
@@ -67,4 +77,29 @@ abstract class AbstractEnvironment
             call_user_func_array([$this,'registerModule'],$data);
         }
     }
+
+    public function loadModules()
+    {
+        $modules = [
+            'database',
+            'mail',
+            'menu',
+            'auth',
+            'views'
+        ];
+
+        foreach ($modules as $module) {
+            $module_class = Tools::filteredName(ucwords($module));
+            $object = 'HXPHP\System\Configs\Modules\\'.$module_class;
+
+            if (!class_exists($object)) {
+                throw new \Exception("O modulo <'$object'> informado nao existe.", 1);
+            } else {
+                $this->$module = new $object();
+            }
+        }
+
+        return $this;
+    }
+
 }

@@ -2,19 +2,27 @@
 
 namespace HXPHP\System\Controller;
 
-use HXPHP\System\Configs\Config;
-use HXPHP\System\Http\Request;
-use HXPHP\System\Http\Response;
-use HXPHP\System\Tools;
-use HXPHP\System\View;
+use HXPHP\System\{
+    Configs\Config,
+    Http\Request,
+    Http\Response,
+    Loader
+};
 use Symfony\Component\HttpFoundation\Request as SymfonyHttpFoundationRequest;
 
+/**
+ * Class Core
+ * @package HXPHP\System\Controller
+ *
+ * @property \HXPHP\System\View\Core $view
+ * @property Response $response
+ */
 class Core
 {
     /**
      * Injeção das Configurações.
      *
-     * @var object
+     * @var Config
      */
     public $configs = null;
 
@@ -23,7 +31,7 @@ class Core
      *
      * @var object
      */
-    private $request;
+    public $request;
 
     /**
      * Injeção do Http Response.
@@ -41,13 +49,18 @@ class Core
 
     public function __construct(Config $configs = null)
     {
-        //Injeção da VIEW
-        $this->view = new View();
-        $this->response = new Response();
+        /** @var Loader $loader */
+        $loader         = Loader::getLoadedStatic('Loader');
 
-        if ($configs) {
-            $this->setConfigs($configs);
+        if(!$configs){
+            $configs    = $loader->getLoaded('Config');
         }
+
+        //Injeção da VIEW
+        $this->view     = $loader->load('core','View\Core',['name' => 'view'], $configs);
+        $this->response = $loader->getLoaded('Http\Response');
+
+        $this->setConfigs($configs);
     }
 
     /**
@@ -82,7 +95,10 @@ class Core
             );
         });
 
+
         $this->request = Request::createFromGlobals();
+
+        Loader::addLoadedInstanceStatic('Request',['object' => $this->request]);
 
         return $this;
     }
@@ -104,47 +120,18 @@ class Core
      */
     public function load()
     {
-        $total_args = func_num_args();
+        $loader = Loader::getLoadedStatic('Loader');
+        $classLoaded = call_user_func_array([$loader,'load'],array_merge([true],func_get_args()));
 
-        if (!$total_args) {
-            throw new \Exception('Nenhum objeto foi definido para ser carregado.', 1);
-        }
-        /**
-         * Retorna todos os argumentos e define o primeiro como
-         * o objeto que será injetado.
-         *
-         * @var array
-         */
-        $args = func_get_args();
-        $object = $args[0];
+        $name = strtolower($classLoaded['name']);
+        $this->$name = $classLoaded['object'];
 
-        /*
-         * Define os demais argumentos passados como
-         * parâmetros para o construtor do objeto injetado
-         */
-        unset($args[0]);
-        $params = !($args) ? [] : array_values($args);
+        return $classLoaded['object'];
+    }
 
-        /**
-         * Tratamento que adiciona a pasta do módulo.
-         */
-        $explode = explode('\\', $object);
-        $object = $object.'\\'.end($explode);
-        $object = 'HXPHP\System\\'.$object;
-
-        if (class_exists($object)) {
-            $name = end($explode);
-            $name = strtolower(Tools::filteredName($name));
-
-            if ($params) {
-                $ref = new \ReflectionClass($object);
-                $this->view->$name = $ref->newInstanceArgs($params);
-            } else {
-                $this->view->$name = new $object();
-            }
-
-            return $this->view->$name;
-        }
+    public function getLoaderClass(string $load)
+    {
+        return Loader::getLoadedStatic($load);
     }
 
     /**
@@ -175,7 +162,7 @@ class Core
      */
     public function getRelativeURL(string $URL, bool $controller = true): string
     {
-        $path = true === $controller ? $this->view->path.DIRECTORY_SEPARATOR : $this->view->subfolder;
+        $path = true === $controller ? $this->view->template->getPath().DIRECTORY_SEPARATOR : $this->view->template->getSubfolder();
 
         return $this->configs->baseURI.$path.$URL;
     }
@@ -191,6 +178,7 @@ class Core
     {
         $URL = false === $external ? $this->getRelativeURL($URL, $controller) : $URL;
 
-        return $this->response->redirectTo($URL);
+        $this->response->redirectTo($URL);
     }
+
 }
