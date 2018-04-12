@@ -57,7 +57,7 @@ class Alert
          */
         $content = sprintf($template, $style, $title, $render);
 
-        $this->storage->set('message', $content);
+        $this->storage->set('alert_message', $content);
     }
 
     /**
@@ -67,8 +67,8 @@ class Alert
      */
     public function getAlert()
     {
-        $message = $this->storage->get('message');
-        $this->storage->clear('message');
+        $message = $this->storage->get('alert_message');
+        $this->storage->clear('alert_message');
 
         return $message;
     }
