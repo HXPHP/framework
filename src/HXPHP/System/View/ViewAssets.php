@@ -1,12 +1,12 @@
 <?php
 
 namespace HXPHP\System\View;
+
 use HXPHP\System\Configs\AbstractEnvironment;
 use HXPHP\System\Configs\Config;
 
 /**
- * Class ViewAssets
- * @package HXPHP\System\View
+ * Class ViewAssets.
  */
 class ViewAssets
 {
@@ -47,7 +47,7 @@ class ViewAssets
      */
     public function getAssets(string $type = ''): array
     {
-        if(in_array($type,['js','css'])){
+        if (in_array($type, ['js', 'css'])) {
             return $this->assets[$type];
         }
 
@@ -94,5 +94,4 @@ class ViewAssets
     {
         $this->assets = array_merge($this->assets, $assets);
     }
-
 }

@@ -8,7 +8,6 @@ use Tests\BaseTestCase;
 
 class LoaderTest extends BaseTestCase
 {
-
     public function testGetLoaderConfigInstance()
     {
         /** @var Loader $loader */
@@ -26,12 +25,12 @@ class LoaderTest extends BaseTestCase
 
     public function testLoaderGlobalConfigInstance()
     {
-        $this->assertInstanceOf('HXPHP\System\Configs\GlobalConfig',Loader::loadStatic('core','Configs\GlobalConfig'));
+        $this->assertInstanceOf('HXPHP\System\Configs\GlobalConfig', Loader::loadStatic('core', 'Configs\GlobalConfig'));
     }
 
     public function testGetGlobalConfigInstance()
     {
-        $this->assertInstanceOf('HXPHP\System\Configs\GlobalConfig',Loader::getLoadedStatic('GlobalConfig'));
+        $this->assertInstanceOf('HXPHP\System\Configs\GlobalConfig', Loader::getLoadedStatic('GlobalConfig'));
     }
 
     public function testAddLoadedInstanceToLoader()
@@ -40,21 +39,20 @@ class LoaderTest extends BaseTestCase
 
         /** @var Loader $loader */
         $loader = Loader::getLoadedStatic('Loader');
-        $loader->addLoadedInstance('ViewTemplate',['object' => $view]);
+        $loader->addLoadedInstance('ViewTemplate', ['object' => $view]);
 
-        $this->assertInstanceOf('HXPHP\System\View\ViewTemplate',$loader->getLoaded('ViewTemplate'));
+        $this->assertInstanceOf('HXPHP\System\View\ViewTemplate', $loader->getLoaded('ViewTemplate'));
     }
 
     public function testStaticAddLoadedInstanceToLoader()
     {
         $view = new ViewTemplate($this->getConfigs());
-        Loader::addLoadedInstanceStatic('ViewTemplate',['object' => $view]);
-        $this->assertInstanceOf('HXPHP\System\View\ViewTemplate',Loader::getLoadedStatic('ViewTemplate'));
+        Loader::addLoadedInstanceStatic('ViewTemplate', ['object' => $view]);
+        $this->assertInstanceOf('HXPHP\System\View\ViewTemplate', Loader::getLoadedStatic('ViewTemplate'));
     }
 
     public function testGetViewTemplateInstanceWithDetail()
     {
-        $this->assertInternalType('array',Loader::getLoadedStatic('ViewTemplate',true));
+        $this->assertInternalType('array', Loader::getLoadedStatic('ViewTemplate', true));
     }
-
 }

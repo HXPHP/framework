@@ -5,8 +5,7 @@ namespace HXPHP\System\View;
 use HXPHP\System\Configs\Config;
 
 /**
- * Class ViewTemplate
- * @package HXPHP\System\View
+ * Class ViewTemplate.
  */
 class ViewTemplate
 {
@@ -25,8 +24,8 @@ class ViewTemplate
      */
     protected $template_tree_order = [
         'header' => '',
-        'view' => '',
-        'footer' => ''
+        'view'   => '',
+        'footer' => '',
     ];
 
     /**
@@ -86,6 +85,7 @@ class ViewTemplate
 
     /**
      * @param string $subfolder
+     *
      * @return $this
      */
     public function setSubfolder(string $subfolder)
@@ -189,6 +189,7 @@ class ViewTemplate
     public function setTemplateTreeOrder(array $template_tree_order)
     {
         $this->template_tree_order = $template_tree_order;
+
         return $this;
     }
 
@@ -208,6 +209,7 @@ class ViewTemplate
     public function setTemplatePart(string $name, string $file): self
     {
         $this->template_tree[$name] = $file;
+
         return $this;
     }
 
@@ -218,11 +220,9 @@ class ViewTemplate
      */
     public function getTemplatePart(string $name)
     {
-        if(isset($this->template_tree[$name])){
+        if (isset($this->template_tree[$name])) {
             return $this->template_tree[$name];
         }
-
-        return null;
     }
 
     /**
@@ -232,9 +232,10 @@ class ViewTemplate
      */
     public function setTemplateParts(array $parts): self
     {
-        foreach ($parts as $name => $file){
-            $this->setTemplatePart($name,$file);
+        foreach ($parts as $name => $file) {
+            $this->setTemplatePart($name, $file);
         }
+
         return $this;
     }
 
@@ -254,6 +255,7 @@ class ViewTemplate
     public function setFile(string $file): self
     {
         $this->template_tree['view'] = $file;
+
         return $this;
     }
 
@@ -274,6 +276,7 @@ class ViewTemplate
     public function setVar(string $name, $value): self
     {
         $this->vars[$name] = $value;
+
         return $this;
     }
 
@@ -285,6 +288,7 @@ class ViewTemplate
     public function setVars(array $vars): self
     {
         $this->vars = array_merge($this->vars, $vars);
+
         return $this;
     }
 
@@ -293,13 +297,12 @@ class ViewTemplate
      */
     public function getVars(string $var = null)
     {
-        if($var){
-            if(isset($this->vars[$var])){
+        if ($var) {
+            if (isset($this->vars[$var])) {
                 return $this->vars[$var];
             }
         }
 
         return $this->vars;
     }
-
 }

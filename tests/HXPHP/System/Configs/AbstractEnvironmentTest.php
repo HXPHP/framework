@@ -12,7 +12,6 @@ class AbstractEnvironmentTest extends BaseTestCase
         $aet = new Development();
         $aet->loadModules();
 
-        $this->assertInstanceOf('HXPHP\System\Configs\Modules\Mail',$aet->mail);
+        $this->assertInstanceOf('HXPHP\System\Configs\Modules\Mail', $aet->mail);
     }
-
 }

@@ -5,8 +5,7 @@ namespace HXPHP\System\Configs\Environments;
 use HXPHP\System\Configs\AbstractEnvironment;
 
 /**
- * Class Production
- * @package HXPHP\System\Configs\Environments
+ * Class Production.
  */
 class Production extends AbstractEnvironment
 {

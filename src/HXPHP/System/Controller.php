@@ -6,8 +6,7 @@ use HXPHP\System\Configs\Config;
 use HXPHP\System\Controller\Core;
 
 /**
- * Class Controller
- * @package HXPHP\System
+ * Class Controller.
  *
  * @property Config $configs
  */
@@ -17,7 +16,7 @@ class Controller extends Core
     {
         parent::__construct($configs);
 
-        foreach (Loader::getLoadedStatic('',true) as $class){
+        foreach (Loader::getLoadedStatic('', true) as $class) {
             $name = strtolower($class['name']);
             $this->$name = $class['object'];
         }

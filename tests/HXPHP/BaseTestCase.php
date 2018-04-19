@@ -25,10 +25,10 @@ abstract class BaseTestCase extends TestCase
         $config = new Config();
         $loader = Loader::getInstance();
 
-        $loader->addLoadedInstance('Config',['object' => $config]);
-        $loader->addLoadedInstance('Loader',['object' => $loader]);
+        $loader->addLoadedInstance('Config', ['object' => $config]);
+        $loader->addLoadedInstance('Loader', ['object' => $loader]);
 
-        $this->app = new App($config,$loader);
+        $this->app = new App($config, $loader);
 
         return $this;
     }

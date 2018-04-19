@@ -19,19 +19,19 @@ class ControllerTest extends BaseTestCase
 
     public function testControllerGetCurrentEnv()
     {
-        $this->assertEquals('tests',$this->controller->configs->getCurrentEnv());
+        $this->assertEquals('tests', $this->controller->configs->getCurrentEnv());
     }
 
     public function testControllerSetCurrentEnv()
     {
         $this->controller->configs->define->setDefaultEnv('development');
-        $this->assertEquals('development',$this->controller->configs->getCurrentEnv());
+        $this->assertEquals('development', $this->controller->configs->getCurrentEnv());
     }
 
     public function testControllerGetLoaderModule()
     {
         $loader = $this->controller->getLoaderClass('Loader');
-        $this->assertInstanceOf('HXPHP\System\Loader',$loader);
+        $this->assertInstanceOf('HXPHP\System\Loader', $loader);
     }
 
     public function testControlerSetAuthModule()
@@ -39,14 +39,13 @@ class ControllerTest extends BaseTestCase
         /** @var Config $config */
         $config = Loader::getLoadedStatic('Config');
 
-        $config->env->tests->auth->setURLs('/hxphp/home/','/hxphp/login/');
+        $config->env->tests->auth->setURLs('/hxphp/home/', '/hxphp/login/');
 
         $auth = $this->controller->load('Services\Auth',
             $config->auth->after_login,
             $config->auth->after_logout,
             true);
 
-        $this->assertInstanceOf('HXPHP\System\Services\Auth\Auth',$auth);
+        $this->assertInstanceOf('HXPHP\System\Services\Auth\Auth', $auth);
     }
-
 }

@@ -1,14 +1,13 @@
 <?php
-namespace HXPHP\System\View;
 
+namespace HXPHP\System\View;
 
 use HXPHP\System\Configs\AbstractEnvironment;
 use HXPHP\System\Configs\Config;
 use HXPHP\System\Configs\Modules\Views;
 
 /**
- * Class ViewPartial
- * @package HXPHP\System\View
+ * Class ViewPartial.
  */
 class ViewPartial
 {
@@ -94,5 +93,4 @@ class ViewPartial
     {
         return $this->subfolder;
     }
-
 }

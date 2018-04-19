@@ -8,12 +8,11 @@ use Tests\BaseTestCase;
 
 class EnvironmentTest extends BaseTestCase
 {
-
     public function testDefaultEnvironment()
     {
         $env = new Environment(new DefineEnvironment());
 
-        $this->assertInstanceOf('HXPHP\System\Configs\Environments\Tests',$env->tests);
+        $this->assertInstanceOf('HXPHP\System\Configs\Environments\Tests', $env->tests);
     }
 
     public function testChangeEnvironmentToDevelopment()
@@ -21,7 +20,7 @@ class EnvironmentTest extends BaseTestCase
         $env = new Environment(new DefineEnvironment());
         $env->add('development');
 
-        $this->assertInstanceOf('HXPHP\System\Configs\Environments\Development',$env->development);
+        $this->assertInstanceOf('HXPHP\System\Configs\Environments\Development', $env->development);
     }
 
     public function testChangeEnvironmentToProduction()
@@ -29,7 +28,6 @@ class EnvironmentTest extends BaseTestCase
         $env = new Environment(new DefineEnvironment());
         $env->add('production');
 
-        $this->assertInstanceOf('HXPHP\System\Configs\Environments\Production',$env->production);
+        $this->assertInstanceOf('HXPHP\System\Configs\Environments\Production', $env->production);
     }
-
 }

@@ -2,14 +2,16 @@
 
 namespace HXPHP\System\Controller;
 
-use HXPHP\System\{
-    View, Configs\Config, Http\Request, Http\Response, Loader, Router
-};
+use HXPHP\System\Configs\Config;
+use HXPHP\System\Http\Request;
+use HXPHP\System\Http\Response;
+use HXPHP\System\Loader;
+use HXPHP\System\Router;
+use HXPHP\System\View;
 use Symfony\Component\HttpFoundation\Request as SymfonyHttpFoundationRequest;
 
 /**
- * Class Core
- * @package HXPHP\System\Controller
+ * Class Core.
  *
  * @property View\Core $view
  * @property Response $response
@@ -51,14 +53,14 @@ class Core
     public function __construct(Config $configs = null)
     {
         /** @var Loader $loader */
-        $loader         = Loader::getLoadedStatic('Loader');
+        $loader = Loader::getLoadedStatic('Loader');
 
-        if(!$configs){
-            $configs    = $loader->getLoaded('Config');
+        if (!$configs) {
+            $configs = $loader->getLoaded('Config');
         }
 
         //Injeção da VIEW
-        $this->view     = $loader->load('core','View\Core',['name' => 'view'], $configs);
+        $this->view = $loader->load('core', 'View\Core', ['name' => 'view'], $configs);
         $this->response = $loader->getLoaded('Http\Response');
 
         $this->setConfigs($configs);
@@ -96,10 +98,9 @@ class Core
             );
         });
 
-
         $this->request = Request::createFromGlobals();
 
-        Loader::addLoadedInstanceStatic('Request',['object' => $this->request]);
+        Loader::addLoadedInstanceStatic('Request', ['object' => $this->request]);
 
         return $this;
     }
@@ -122,7 +123,7 @@ class Core
     public function load()
     {
         $loader = Loader::getLoadedStatic('Loader');
-        $classLoaded = call_user_func_array([$loader,'load'],array_merge([true],func_get_args()));
+        $classLoaded = call_user_func_array([$loader, 'load'], array_merge([true], func_get_args()));
 
         $name = strtolower($classLoaded['name']);
         $this->$name = $classLoaded['object'];
@@ -181,5 +182,4 @@ class Core
 
         $this->response->redirectTo($URL);
     }
-
 }

@@ -36,10 +36,10 @@ class ViewsTest extends BaseTestCase
 
     public function testAssetsConfigToView()
     {
-        $this->view->setAssets('css','arquivos/css/teste.css');
+        $this->view->setAssets('css', 'arquivos/css/teste.css');
         $this->assertEquals('arquivos/css/teste.css', $this->view->getAssets()['css'][0]);
 
-        $this->view->setAssets('js','arquivos/js/teste.js');
+        $this->view->setAssets('js', 'arquivos/js/teste.js');
         $this->assertEquals('arquivos/js/teste.js', $this->view->getAssets()['js'][0]);
     }
 
@@ -73,5 +73,4 @@ class ViewsTest extends BaseTestCase
         $this->view->setViewVarsPrefix('hx');
         $this->assertEquals('hx', $this->view->getViewVarsPrefix());
     }
-
 }

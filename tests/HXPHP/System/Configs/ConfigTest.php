@@ -7,7 +7,7 @@ use Tests\BaseTestCase;
 
 class ConfigTest extends BaseTestCase
 {
-    /** @var  Config */
+    /** @var Config */
     protected $configs;
 
     public function __construct()
@@ -19,13 +19,13 @@ class ConfigTest extends BaseTestCase
 
     public function testGetCurrentEnv()
     {
-        $this->assertEquals('tests',$this->configs->getCurrentEnv());
+        $this->assertEquals('tests', $this->configs->getCurrentEnv());
     }
 
     public function testSetCurrentEnv()
     {
         $this->configs->define->setDefaultEnv('development');
-        $this->assertEquals('development',$this->configs->getCurrentEnv());
+        $this->assertEquals('development', $this->configs->getCurrentEnv());
     }
 
     public function testSetAuthModuleConfigParameter()
@@ -33,20 +33,19 @@ class ConfigTest extends BaseTestCase
         $this->configs->auth->after_login = '/hxphp/test/';
         $this->configs->auth->after_logout = '/hxphp/login/';
 
-        $this->assertEquals('/hxphp/test/',$this->configs->auth->after_login);
-        $this->assertEquals('/hxphp/login/',$this->configs->auth->after_logout);
+        $this->assertEquals('/hxphp/test/', $this->configs->auth->after_login);
+        $this->assertEquals('/hxphp/login/', $this->configs->auth->after_logout);
     }
 
     public function testSetCustomConfigPropertyValue()
     {
         $this->configs->title = 'Meu Teste Automatizado HXPHP';
 
-        $this->assertEquals('Meu Teste Automatizado HXPHP',$this->configs->title);
+        $this->assertEquals('Meu Teste Automatizado HXPHP', $this->configs->title);
     }
 
     public function testGetConfigPropertyValue()
     {
-        $this->assertEquals('HXPHP Framework',$this->configs->title);
+        $this->assertEquals('HXPHP Framework', $this->configs->title);
     }
-
 }

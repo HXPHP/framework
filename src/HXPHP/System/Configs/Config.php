@@ -8,18 +8,15 @@ use HXPHP\System\Configs\Modules\Mail;
 use HXPHP\System\Configs\Modules\Views;
 
 /**
- * Class Config
- * @package HXPHP\System\Configs
+ * Class Config.
  *
  * @property GlobalConfig $global
  * @property Environment $env
  * @property DefineEnvironment $define
- *
  * @property Auth $auth
  * @property Database $database
  * @property Mail $mail
  * @property Views $views
- *
  * @property string $title
  * @property object $site
  * @property object $controllers

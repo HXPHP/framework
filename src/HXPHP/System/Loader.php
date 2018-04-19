@@ -16,8 +16,8 @@ class Loader
      */
     private static $instance = null;
 
-    const CORE_NAMESPACE = 'HXPHP\System\\',
-        APP_NAMESPACE = '\App\\';
+    const CORE_NAMESPACE = 'HXPHP\System\\';
+    const APP_NAMESPACE = '\App\\';
 
     /**
      * @param string $class
@@ -29,26 +29,27 @@ class Loader
     public function load()
     {
         $total_args = func_num_args();
-        if (!$total_args)
-            throw new \Exception("Nenhum objeto foi definido para ser carregado.", 1);
-
+        if (!$total_args) {
+            throw new \Exception('Nenhum objeto foi definido para ser carregado.', 1);
+        }
         /**
          * Retorna todos os argumentos e define o primeiro como
-         * o objeto que será injetado
+         * o objeto que será injetado.
+         *
          * @var array
          */
         $args = func_get_args();
 
         $loadedByController = null;
 
-        if(is_bool($args[0])){
+        if (is_bool($args[0])) {
             $loadedByController = true;
             unset($args[0]);
             $args = array_values($args);
         }
 
         $type = $args[0];
-        if(!in_array($type, ['core','hxphp', 'composer', 'local'])){
+        if (!in_array($type, ['core', 'hxphp', 'composer', 'local'])) {
             $type = 'hxphp';
             $object = $args[0];
             unset($args[0]);
@@ -60,65 +61,64 @@ class Loader
         $args = array_values($args);
         $moduleName = null;
 
-        if(isset($args[0]['name'])){
+        if (isset($args[0]['name'])) {
             $moduleName = $args[0]['name'];
             unset($args[0]);
             $args = array_values($args);
         }
 
         /**
-         * Tratamento que adiciona a pasta do módulo
+         * Tratamento que adiciona a pasta do módulo.
          */
         $explode = explode('\\', $object);
-        if($type === 'core')
-        {
-            $object = self::CORE_NAMESPACE . $object;
-            if(!$moduleName)
+        if ($type === 'core') {
+            $object = self::CORE_NAMESPACE.$object;
+            if (!$moduleName) {
                 $moduleName = end($explode);
-        }
-        if($type === 'hxphp')
-        {
-            $object = self::CORE_NAMESPACE . $object;
-            $object = $object . '\\' . end($explode);
-            if(!$moduleName)
-                $moduleName = end($explode);
-        }
-        if($type === 'composer')
-        {
-            if(count($explode) == 1)
-            {
-                $module = $explode[0];
-                $object = $module.'\src\\'.$module;
-                if(!$moduleName)
-                    $moduleName = $module;
-            } else {
-                $object = implode('\\',$explode);
-                if(!$moduleName)
-                    $moduleName = $explode[0];
             }
         }
-        if($type === 'local')
-        {
-            if(count($explode) == 1)
-            {
+        if ($type === 'hxphp') {
+            $object = self::CORE_NAMESPACE.$object;
+            $object = $object.'\\'.end($explode);
+            if (!$moduleName) {
+                $moduleName = end($explode);
+            }
+        }
+        if ($type === 'composer') {
+            if (count($explode) == 1) {
                 $module = $explode[0];
                 $object = $module.'\src\\'.$module;
-                if(!$moduleName)
+                if (!$moduleName) {
                     $moduleName = $module;
+                }
             } else {
-                $object = implode('\\',$explode);
-                if(!$moduleName)
+                $object = implode('\\', $explode);
+                if (!$moduleName) {
                     $moduleName = $explode[0];
+                }
+            }
+        }
+        if ($type === 'local') {
+            if (count($explode) == 1) {
+                $module = $explode[0];
+                $object = $module.'\src\\'.$module;
+                if (!$moduleName) {
+                    $moduleName = $module;
+                }
+            } else {
+                $object = implode('\\', $explode);
+                if (!$moduleName) {
+                    $moduleName = $explode[0];
+                }
             }
         }
 
         /**
          * Define os demais argumentos passados como
-         * parâmetros para o construtor do objeto injetado
+         * parâmetros para o construtor do objeto injetado.
          */
         $params = !($args) ? [] : array_values($args);
-        if (class_exists($object))
-        {
+        if (class_exists($object)) {
             $name = end($explode);
             $name = strtolower(Tools::filteredName($name));
 
@@ -127,48 +127,45 @@ class Loader
 
             $enviroment = $configs->define->getDefault();
 
-            if ($params)
-            {
+            if ($params) {
                 $ref = new \ReflectionClass($object);
 
                 self::$loaded[$name] = [
-                    'name' => $moduleName,
-                    'object' => $ref->newInstanceArgs($params)
+                    'name'   => $moduleName,
+                    'object' => $ref->newInstanceArgs($params),
                 ];
             } else {
-                if(isset($configs->env->$enviroment->$moduleName))
-                {
+                if (isset($configs->env->$enviroment->$moduleName)) {
                     self::$loaded[$name] = [
-                        'name' => $moduleName,
-                        'object' => new $object($configs->env->$enviroment->$moduleName)
+                        'name'   => $moduleName,
+                        'object' => new $object($configs->env->$enviroment->$moduleName),
                     ];
                 } else {
                     self::$loaded[$name] = [
-                        'name' => $moduleName,
-                        'object' => new $object()
+                        'name'   => $moduleName,
+                        'object' => new $object(),
                     ];
                 }
             }
 
-            if($loadedByController)
-            {
+            if ($loadedByController) {
                 return self::$loaded[$name];
             }
 
             return self::$loaded[$name]['object'];
         }
-
-        return null;
     }
 
     public static function loadStatic()
     {
-        $loader = Loader::getLoadedStatic('Loader');
-        if(empty($loader)){
+        $loader = self::getLoadedStatic('Loader');
+        if (empty($loader)) {
             $loader = self::getInstance();
-            return call_user_func_array([$loader,'load'],func_get_args());
+
+            return call_user_func_array([$loader, 'load'], func_get_args());
         }
-        return call_user_func_array([$loader,'load'],func_get_args());
+
+        return call_user_func_array([$loader, 'load'], func_get_args());
     }
 
     /**
@@ -206,61 +203,62 @@ class Loader
      */
     public static function getInstance()
     {
-        if(self::$instance === null)
+        if (self::$instance === null) {
             self::$instance = new self();
+        }
 
         return self::$instance;
     }
 
     /**
      * @param string $class
+     *
      * @return array
      *
      * @version 1.0
      */
     public function getLoaded(string $class = '', $details = false)
     {
-        if(!empty($class)){
-
+        if (!empty($class)) {
             $class = strtolower($class);
 
-            if(isset(self::$loaded[$class])){
-                if($details){
+            if (isset(self::$loaded[$class])) {
+                if ($details) {
                     return self::$loaded[$class];
                 }
 
                 return self::$loaded[$class]['object'];
-            } else
-                return null;
-
-        }
-        else
+            } else {
+                return;
+            }
+        } else {
             return self::$loaded;
+        }
     }
 
     /**
      * @param string $class
+     *
      * @return array
      *
      * @version 1.0
      */
     public static function getLoadedStatic(string $class = '', $details = false)
     {
-        if(!empty($class)){
-
+        if (!empty($class)) {
             $class = strtolower($class);
 
-            if(isset(self::$loaded[$class])){
-                if($details){
+            if (isset(self::$loaded[$class])) {
+                if ($details) {
                     return self::$loaded[$class];
                 }
 
                 return self::$loaded[$class]['object'];
-            }
-            else
+            } else {
                 return [];
-        } else
+            }
+        } else {
             return self::$loaded;
+        }
     }
-
 }

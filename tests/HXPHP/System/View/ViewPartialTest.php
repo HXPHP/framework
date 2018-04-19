@@ -27,5 +27,4 @@ class ViewPartialTest extends BaseTestCase
         $this->partial->setSubfolder('pedacos');
         $this->assertEquals('pedacos', $this->partial->getSubfolder());
     }
-
 }

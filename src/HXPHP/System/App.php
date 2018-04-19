@@ -32,9 +32,9 @@ class App
      */
     public function __construct(Config $configs, Loader $loader)
     {
-        $this->configs  = $configs;
-        $this->router   = $loader->load('core','Router',$configs->baseURI, $configs->global->controllers->directory);
-        $this->response = $loader->load('core','Http\Response');
+        $this->configs = $configs;
+        $this->router = $loader->load('core', 'Router', $configs->baseURI, $configs->global->controllers->directory);
+        $this->response = $loader->load('core', 'Http\Response');
     }
 
     /**

@@ -4,28 +4,28 @@ namespace HXPHP\System\Configs\Modules;
 
 class Views
 {
-    protected $extension   = '.phtml';
+    protected $extension = '.phtml';
 
     protected $partialsDir = 'partials';
 
-    protected $directory   = 'views';
+    protected $directory = 'views';
 
-    protected $subfolder   = 'default';
+    protected $subfolder = 'default';
 
-    protected $assets      = [
+    protected $assets = [
         'css' => [],
         'js'  => [],
     ];
 
-    protected $template     = true;
+    protected $template = true;
 
     /**
      * @var array
      */
     protected $template_tree = [
         'header' => 'header',
-        'view' => 'index',
-        'footer' => 'footer'
+        'view'   => 'index',
+        'footer' => 'footer',
     ];
 
     /**
@@ -33,27 +33,29 @@ class Views
      */
     protected $template_tree_order = [
         'header' => '',
-        'view' => '',
-        'footer' => ''
+        'view'   => '',
+        'footer' => '',
     ];
 
     protected $templateFolder = '';
 
-    protected $header       = 'header';
+    protected $header = 'header';
 
-    protected $footer       = 'footer';
+    protected $footer = 'footer';
 
-    protected $title        = 'HXPHP';
+    protected $title = 'HXPHP';
 
     protected $viewVarsPrefix = 'view';
 
     /**
      * @param string $extension
+     *
      * @return $this
      */
     public function setExtension(string $extension)
     {
         $this->extension = $extension;
+
         return $this;
     }
 
@@ -67,11 +69,13 @@ class Views
 
     /**
      * @param string $partialsDir
+     *
      * @return $this
      */
     public function setPartialsDir(string $partialsDir)
     {
         $this->partialsDir = $partialsDir;
+
         return $this;
     }
 
@@ -85,11 +89,13 @@ class Views
 
     /**
      * @param string $directory
+     *
      * @return $this
      */
     public function setViewDirectory(string $directory)
     {
         $this->directory = $directory;
+
         return $this;
     }
 
@@ -101,16 +107,15 @@ class Views
         return $this->directory;
     }
 
-
     /**
      * @param string $type
      * @param $assets array|string
+     *
      * @return $this
      */
     public function setAssets(string $type, $assets)
     {
-        if(in_array($type,['js','css']))
-        {
+        if (in_array($type, ['js', 'css'])) {
             (is_array($assets)) ?
                 $this->assets[$type] = array_merge($this->assets[$type], $assets) :
                 array_push($this->assets[$type], $assets);
@@ -129,11 +134,13 @@ class Views
 
     /**
      * @param bool $template
+     *
      * @return $this
      */
     public function enableTemplate(bool $template)
     {
         $this->template = $template;
+
         return $this;
     }
 
@@ -148,11 +155,13 @@ class Views
     /**
      * @param string $name
      * @param string $file
+     *
      * @return $this
      */
     public function setTemplatePart(string $name, string $file)
     {
         $this->template_tree[$name] = $file;
+
         return $this;
     }
 
@@ -166,11 +175,13 @@ class Views
 
     /**
      * @param array $template_tree_order
+     *
      * @return $this
      */
     public function setTemplateTreeOrder(array $template_tree_order)
     {
         $this->template_tree_order = $template_tree_order;
+
         return $this;
     }
 
@@ -184,11 +195,13 @@ class Views
 
     /**
      * @param string $header
+     *
      * @return $this
      */
     public function setHeader(string $header)
     {
         $this->header = $header;
+
         return $this;
     }
 
@@ -202,11 +215,13 @@ class Views
 
     /**
      * @param string $footer
+     *
      * @return $this
      */
     public function setFooter(string $footer)
     {
         $this->footer = $footer;
+
         return $this;
     }
 
@@ -220,11 +235,13 @@ class Views
 
     /**
      * @param string $title
+     *
      * @return $this
      */
     public function setTitle(string $title)
     {
         $this->title = $title;
+
         return $this;
     }
 
@@ -238,11 +255,13 @@ class Views
 
     /**
      * @param string $viewVarsPrefix
+     *
      * @return $this
      */
     public function setViewVarsPrefix(string $viewVarsPrefix)
     {
         $this->viewVarsPrefix = $viewVarsPrefix;
+
         return $this;
     }
 
@@ -253,5 +272,4 @@ class Views
     {
         return $this->viewVarsPrefix;
     }
-
 }

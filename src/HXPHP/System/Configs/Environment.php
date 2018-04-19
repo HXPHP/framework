@@ -2,16 +2,13 @@
 
 namespace HXPHP\System\Configs;
 
-use HXPHP\System\Configs\Environments\{
-    Development,
-    Production,
-    Tests
-};
+use HXPHP\System\Configs\Environments\Development;
+use HXPHP\System\Configs\Environments\Production;
+use HXPHP\System\Configs\Environments\Tests;
 use HXPHP\System\Tools;
 
 /**
- * Class Environment
- * @package HXPHP\System\Configs
+ * Class Environment.
  *
  * @property Development $development
  * @property Tests $tests
@@ -31,8 +28,7 @@ class Environment
 
     public function add(string $environment = null)
     {
-        if (!$environment)
-        {
+        if (!$environment) {
             $environment = $this->defaultEnvironment = $this->defineEnvironment->getDefault();
         }
 

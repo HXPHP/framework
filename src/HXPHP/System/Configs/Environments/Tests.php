@@ -5,8 +5,7 @@ namespace HXPHP\System\Configs\Environments;
 use HXPHP\System\Configs\AbstractEnvironment;
 
 /**
- * Class Tests
- * @package HXPHP\System\Configs\Environments
+ * Class Tests.
  */
 class Tests extends AbstractEnvironment
 {

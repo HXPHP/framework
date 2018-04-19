@@ -5,8 +5,7 @@ namespace HXPHP\System\Configs\Environments;
 use HXPHP\System\Configs\AbstractEnvironment;
 
 /**
- * Class Development
- * @package HXPHP\System\Configs\Environments
+ * Class Development.
  */
 class Development extends AbstractEnvironment
 {

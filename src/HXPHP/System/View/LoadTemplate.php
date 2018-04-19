@@ -5,12 +5,11 @@ namespace HXPHP\System\View;
 use HXPHP\System\Configs\Modules\Views;
 
 /**
- * Class LoadTemplate
- * @package HXPHP\System\View
+ * Class LoadTemplate.
  */
 class LoadTemplate
 {
-    static $DS = DIRECTORY_SEPARATOR;
+    public static $DS = DIRECTORY_SEPARATOR;
 
     /**
      * @var string
@@ -22,7 +21,7 @@ class LoadTemplate
      */
     protected $tree = [];
 
-    /** @var  ViewTemplate */
+    /** @var ViewTemplate */
     protected $template;
 
     /**
@@ -41,40 +40,36 @@ class LoadTemplate
 
         $this->viewConfig = $config;
 
-        $this->partial  = $partial;
+        $this->partial = $partial;
 
-        $this->treeOrderOrganize($template->getTemplateTreeOrder(),$template->getTemplateTree());
+        $this->treeOrderOrganize($template->getTemplateTreeOrder(), $template->getTemplateTree());
     }
 
-    protected function treeOrderOrganize(array $order,array $tree)
+    protected function treeOrderOrganize(array $order, array $tree)
     {
-        if((!isset($tree['header'])) || (isset($tree['header']) && empty($tree['header'])))
-        {
+        if ((!isset($tree['header'])) || (isset($tree['header']) && empty($tree['header']))) {
             $tree['header'] = 'header';
         }
 
-        if((!isset($tree['view'])) || (isset($tree['view']) && empty($tree['view'])))
-        {
+        if ((!isset($tree['view'])) || (isset($tree['view']) && empty($tree['view']))) {
             $tree['view'] = 'view';
         }
 
-        if((!isset($tree['footer'])) || (isset($tree['footer']) && empty($tree['footer'])))
-        {
+        if ((!isset($tree['footer'])) || (isset($tree['footer']) && empty($tree['footer']))) {
             $tree['footer'] = 'footer';
         }
 
-        foreach ($order as $key => $item){
-
-            if(!is_string($key)){
+        foreach ($order as $key => $item) {
+            if (!is_string($key)) {
                 continue;
             }
 
-            if(isset($tree[$key])){
+            if (isset($tree[$key])) {
                 $this->tree[$key] = $tree[$key];
             }
         }
 
-        if(empty($this->tree)){
+        if (empty($this->tree)) {
             throw new \Exception('Não foi possivel organizar a ordem de carregamento 
             do template do sistema. Verifique se existe algum erro na montagem da ordem.');
         }
@@ -92,12 +87,11 @@ class LoadTemplate
 
         $viewData = $this->template->getVars();
 
-        if(!isset($this->tree['view']))
-        {
+        if (!isset($this->tree['view'])) {
             throw new \Exception('Não foi configurada a areá que será incluida na view do controller, certifique-se que exista a chave "view" no array de arvore do template ');
         }
 
-        if(!$this->template->getTemplate()){
+        if (!$this->template->getTemplate()) {
             $view = $this->tree['view'];
 
             $this->tree = ['view' => $view];
@@ -110,19 +104,19 @@ class LoadTemplate
 
         $errorNoFile = null;
 
-        foreach ($this->tree as $key => $viewPart){
-            if(is_numeric($key)){
+        foreach ($this->tree as $key => $viewPart) {
+            if (is_numeric($key)) {
                 continue;
             }
 
-            $view = $viewPath . $subfolder . $viewPart . $viewsExt;
+            $view = $viewPath.$subfolder.$viewPart.$viewsExt;
 
-            if($key === 'view'){
-                $view = $viewPath . $path.self::$DS . $viewPart . $viewsExt;
+            if ($key === 'view') {
+                $view = $viewPath.$path.self::$DS.$viewPart.$viewsExt;
             }
 
-            if(file_exists($view)){
-                if(isset($viewData[$key])){
+            if (file_exists($view)) {
+                if (isset($viewData[$key])) {
                     extract($viewData[$key], EXTR_PREFIX_ALL, $this->viewConfig->getViewVarsPrefix());
                 } else {
                     extract($viewData, EXTR_PREFIX_ALL, $this->viewConfig->getViewVarsPrefix());
@@ -130,13 +124,14 @@ class LoadTemplate
 
                 include_once $view;
             } else {
-                $errorNoFile .= $viewPart . $viewsExt.', ';
+                $errorNoFile .= $viewPart.$viewsExt.', ';
             }
         }
 
-        if($errorNoFile){
-            $errorNoFile = substr($errorNoFile,0,-2);
-            throw new \Exception('Um ou mais arquivos do template não foram localizados: '. $errorNoFile);
+        if ($errorNoFile) {
+            $errorNoFile = substr($errorNoFile, 0, -2);
+
+            throw new \Exception('Um ou mais arquivos do template não foram localizados: '.$errorNoFile);
         }
 
         exit;
@@ -144,7 +139,6 @@ class LoadTemplate
 
     public function partial(string $view, array $params = [])
     {
-        $this->partial->partial($view,$params);
+        $this->partial->partial($view, $params);
     }
-
 }
