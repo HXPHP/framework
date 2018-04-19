@@ -3,7 +3,6 @@
 namespace HXPHP\System;
 
 use HXPHP\System\Configs\Config;
-use HXPHP\System\Http\Response;
 
 class App
 {
@@ -31,11 +30,11 @@ class App
     /**
      * Método Construtor.
      */
-    public function __construct(Config $configs)
+    public function __construct(Config $configs, Loader $loader)
     {
-        $this->configs = $configs;
-        $this->router = new Router($configs->baseURI, $configs->global->controllers->directory);
-        $this->response = new Response();
+        $this->configs  = $configs;
+        $this->router   = $loader->load('core','Router',$configs->baseURI, $configs->global->controllers->directory);
+        $this->response = $loader->load('core','Http\Response');
     }
 
     /**
@@ -98,6 +97,7 @@ class App
             $controller = $notFoundController;
         }
 
+        /** @var Controller $app */
         $app = new $controller($this->configs);
 
         //Verifica se a Action requisitada não existe

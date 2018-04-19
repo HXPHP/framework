@@ -2,9 +2,7 @@
 
 namespace HXPHP\System\Services\Auth;
 
-use HXPHP\System\Http\Request;
-use HXPHP\System\Http\Response;
-use HXPHP\System\Storage\Session\Session;
+use HXPHP\System\Loader;
 
 class Auth
 {
@@ -43,9 +41,9 @@ class Auth
     public function __construct(array $after_login, array $after_logout, bool $redirect = false, string $subfolder = 'default')
     {
         //Instância dos objetos injetados
-        $this->request = new Request();
-        $this->response = new Response();
-        $this->storage = new Session();
+        $this->request = Loader::getLoadedStatic('Request');
+        $this->response = Loader::getLoadedStatic('Response');
+        $this->storage = Loader::loadStatic('core','Storage\Session\Session');
 
         if (!($after_login[$subfolder]) || !($after_logout[$subfolder])) {
             throw new \Exception("Verifique as configuracoes de autenticacao para a subpasta: < $subfolder >", 1);
@@ -79,6 +77,8 @@ class Auth
         if ($this->redirect) {
             return $this->response->redirectTo($this->url_redirect_after_login);
         }
+
+        return null;
     }
 
     /**
@@ -97,6 +97,8 @@ class Auth
         if ($this->redirect) {
             return $this->response->redirectTo($this->url_redirect_after_logout);
         }
+
+        return null;
     }
 
     /**

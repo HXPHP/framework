@@ -32,7 +32,7 @@ class DefineEnvironment
 
     public function setDefaultEnv(string $environment)
     {
-        $env = new Environment();
+        $env = new Environment($this);
         if (is_object($env->add($environment))) {
             $this->currentEnviroment = $environment;
         }
@@ -41,15 +41,5 @@ class DefineEnvironment
     public function getDefault(): string
     {
         return $this->currentEnviroment;
-    }
-}
-
-trait CurrentEnviroment
-{
-    public function getCurrentEnvironment(): string
-    {
-        $default = new DefineEnvironment();
-
-        return $default->getDefault();
     }
 }

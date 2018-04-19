@@ -2,6 +2,29 @@
 
 namespace HXPHP\System\Configs;
 
+use HXPHP\System\Configs\Modules\Auth;
+use HXPHP\System\Configs\Modules\Database;
+use HXPHP\System\Configs\Modules\Mail;
+use HXPHP\System\Configs\Modules\Views;
+
+/**
+ * Class Config
+ * @package HXPHP\System\Configs
+ *
+ * @property GlobalConfig $global
+ * @property Environment $env
+ * @property DefineEnvironment $define
+ *
+ * @property Auth $auth
+ * @property Database $database
+ * @property Mail $mail
+ * @property Views $views
+ *
+ * @property string $title
+ * @property object $site
+ * @property object $controllers
+ * @property object $models
+ */
 class Config extends Bootstrap
 {
     public $global;
@@ -15,8 +38,9 @@ class Config extends Bootstrap
         parent::__construct();
 
         $this->global = new GlobalConfig();
-        $this->env = new Environment();
         $this->define = new DefineEnvironment();
+
+        $this->env = new Environment($this->define);
         $this->env->add();
     }
 
@@ -31,5 +55,10 @@ class Config extends Bootstrap
         }
 
         throw new \Exception("Parametro/Modulo '$param' nao encontrado. Verifique se o ambiente definido esta configurado e os modulo utilizados registrados.", 1);
+    }
+
+    public function getCurrentEnv()
+    {
+        return $this->define->getDefault();
     }
 }
