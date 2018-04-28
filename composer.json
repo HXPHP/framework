@@ -6,7 +6,7 @@
     "keywords": ["framework", "hxphp"],
     "license": "MIT",
     "require": {
-        "php": ">=7.0.0",
+        "php": ">=7.1.0",
         "symfony/http-foundation": "^4.0",
         "php-activerecord/php-activerecord": "*"
     },
