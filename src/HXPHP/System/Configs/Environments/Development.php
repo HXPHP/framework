@@ -1,12 +1,8 @@
 <?php
-
 namespace HXPHP\System\Configs\Environments;
 
 use HXPHP\System\Configs\AbstractEnvironment;
 
-/**
- * Class Development.
- */
 class Development extends AbstractEnvironment
 {
     public $servers;
@@ -17,7 +13,7 @@ class Development extends AbstractEnvironment
         $this->servers = [
             'localhost',
             '127.0.0.1',
-            '::1',
+            '::1'
         ];
     }
 }

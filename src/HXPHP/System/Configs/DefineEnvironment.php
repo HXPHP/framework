@@ -1,5 +1,4 @@
 <?php
-
 namespace HXPHP\System\Configs;
 
 use HXPHP\System\Configs\Environments\Development;
@@ -13,14 +12,15 @@ class DefineEnvironment
         if (array_key_exists('SERVER_NAME', $_SERVER)
             && array_key_exists('SERVER_ADDR', $_SERVER)) {
             $this->setCurrentEnviroment();
-        } else {
+        }
+        else {
             $this->currentEnviroment = 'tests';
         }
     }
 
     public function setCurrentEnviroment()
     {
-        $development = new Development();
+        $development = new Development;
 
         $server_name = $_SERVER['SERVER_NAME'];
         $server_addr = $_SERVER['SERVER_ADDR'];
@@ -32,14 +32,22 @@ class DefineEnvironment
 
     public function setDefaultEnv(string $environment)
     {
-        $env = new Environment($this);
-        if (is_object($env->add($environment))) {
+        $env = new Environment;
+        if (is_object($env->add($environment)))
             $this->currentEnviroment = $environment;
-        }
     }
-
+    
     public function getDefault(): string
     {
         return $this->currentEnviroment;
+    }
+}
+
+trait CurrentEnviroment
+{
+    public function getCurrentEnvironment(): string
+    {
+        $default = new DefineEnvironment;
+        return $default->getDefault();
     }
 }

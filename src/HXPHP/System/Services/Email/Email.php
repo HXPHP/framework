@@ -1,5 +1,4 @@
 <?php
-
 namespace HXPHP\System\Services\Email;
 
 class Email
@@ -14,15 +13,13 @@ class Email
     }
 
     /**
-     * Envia e-mail.
-     *
-     * @param string $to          E-mail para qual será enviada a mensagem
-     * @param string $assunto     Assunto da mensagem
-     * @param string $message     Mensagem
-     * @param array  $from        Array com Remetente e E-mail do remetente
-     * @param bool   $accept_html Define se a mensagem será enviada em TXT ou HTML
-     *
-     * @return bool Status de envio e mensagem
+     * Envia e-mail
+     * @param  string $to    E-mail para qual será enviada a mensagem
+     * @param  string $assunto  Assunto da mensagem
+     * @param  string $message Mensagem
+     * @param  array  $from   Array com Remetente e E-mail do remetente
+     * @param  bool   $accept_html Define se a mensagem será enviada em TXT ou HTML
+     * @return bool             Status de envio e mensagem
      */
     public function send(string $to, string $subject, string $message, array $from = [], bool $accept_html = true): bool
     {

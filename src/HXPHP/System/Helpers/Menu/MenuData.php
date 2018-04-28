@@ -1,19 +1,16 @@
 <?php
-
 namespace HXPHP\System\Helpers\Menu;
 
 class MenuData
 {
     /**
-     * Extrair dados da key dos menus.
-     *
-     * @param string $key Titulo/Icone
-     *
-     * @return object Objeto com dados extraídos
+     * Extrair dados da key dos menus
+     * @param  string $key Titulo/Icone
+     * @return object      Objeto com dados extraídos
      */
     public static function get(string $key): \stdClass
     {
-        $obj = new \stdClass();
+        $obj = new \stdClass;
 
         $explode = explode('/', $key);
 
