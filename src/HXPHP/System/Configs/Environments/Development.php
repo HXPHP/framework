@@ -4,6 +4,9 @@ namespace HXPHP\System\Configs\Environments;
 
 use HXPHP\System\Configs\AbstractEnvironment;
 
+/**
+ * Class Development.
+ */
 class Development extends AbstractEnvironment
 {
     public $servers;
