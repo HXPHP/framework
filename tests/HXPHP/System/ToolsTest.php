@@ -7,7 +7,7 @@ use Tests\BaseTestCase;
 
 final class ToolsTest extends BaseTestCase
 {
-    public function testHashHXFunction(): void
+    public function testHashHXFunction()
     {
         $hash = Tools::hashHX('hxphp', 123);
 
@@ -18,7 +18,7 @@ final class ToolsTest extends BaseTestCase
         );
     }
 
-    public function testFilteredNameFunction(): void
+    public function testFilteredNameFunction()
     {
         $this->assertEquals(
             'HxPhp',
@@ -31,7 +31,7 @@ final class ToolsTest extends BaseTestCase
         );
     }
 
-    public function testFilteredFileNameFunction(): void
+    public function testFilteredFileNameFunction()
     {
         $this->assertEquals(
             'voce_esta_otimo_&_nos_tambem',
@@ -39,7 +39,7 @@ final class ToolsTest extends BaseTestCase
         );
     }
 
-    public function testDecamelizeFunction(): void
+    public function testDecamelizeFunction()
     {
         $this->assertEquals(
             'carropretoparadonaporta',

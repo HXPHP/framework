@@ -37,7 +37,7 @@ final class RequestTest extends BaseTestCase
         $this->request = Request::createFromGlobals();
     }
 
-    public function testGetMethodFunction(): void
+    public function testGetMethodFunction()
     {
         $request = $this->request->create(
             '/',
@@ -49,7 +49,7 @@ final class RequestTest extends BaseTestCase
         $this->assertEquals('POST', $method);
     }
 
-    public function testSetCustomFiltersFunction(): void
+    public function testSetCustomFiltersFunction()
     {
         $request = $this->request->create(
             '/',
@@ -70,7 +70,7 @@ final class RequestTest extends BaseTestCase
         $this->assertNotEmpty($request->custom_filters);
     }
 
-    public function testFilterFunction(): void
+    public function testFilterFunction()
     {
         $request = $this->request->create(
             '/',
@@ -106,7 +106,7 @@ final class RequestTest extends BaseTestCase
         $this->assertEquals([1, 2], $request->get('multiple_integer_field'));
     }
 
-    public function testGetFunction(): void
+    public function testGetFunction()
     {
         $request = $this->request->create(
             '/',
@@ -129,7 +129,7 @@ final class RequestTest extends BaseTestCase
         $this->assertFalse($type_error);
     }
 
-    public function testPostFunction(): void
+    public function testPostFunction()
     {
         $request = $this->request->create(
             '/',
@@ -149,7 +149,7 @@ final class RequestTest extends BaseTestCase
         $this->assertNull($not_exists);
     }
 
-    public function testServerFunction(): void
+    public function testServerFunction()
     {
         $this->assertNotEmpty($this->request->server('SCRIPT_FILENAME'));
 
@@ -157,14 +157,14 @@ final class RequestTest extends BaseTestCase
         $this->assertTrue(is_array($all_params) && !empty($all_params));
     }
 
-    public function testCookieFunction(): void
+    public function testCookieFunction()
     {
         $request = $this->request->cookies->add(['foo' => 'bar']);
 
         $this->assertEquals('bar', $this->request->cookie('foo'));
     }
 
-    public function testIsGetFunction(): void
+    public function testIsGetFunction()
     {
         $request = $this->request->create(
             '/',
@@ -174,7 +174,7 @@ final class RequestTest extends BaseTestCase
         $this->assertTrue($request->isGet());
     }
 
-    public function testIsPostFunction(): void
+    public function testIsPostFunction()
     {
         $request = $this->request->create(
             '/',
@@ -184,7 +184,7 @@ final class RequestTest extends BaseTestCase
         $this->assertTrue($request->isPost());
     }
 
-    public function testIsPutFunction(): void
+    public function testIsPutFunction()
     {
         $request = $this->request->create(
             '/',
@@ -194,7 +194,7 @@ final class RequestTest extends BaseTestCase
         $this->assertTrue($request->isPut());
     }
 
-    public function testIsDeleteFunction(): void
+    public function testIsDeleteFunction()
     {
         $request = $this->request->create(
             '/',
@@ -204,7 +204,7 @@ final class RequestTest extends BaseTestCase
         $this->assertTrue($request->isDelete());
     }
 
-    public function testIsHeadFunction(): void
+    public function testIsHeadFunction()
     {
         $request = $this->request->create(
             '/',
@@ -214,7 +214,7 @@ final class RequestTest extends BaseTestCase
         $this->assertTrue($request->isHead());
     }
 
-    public function testIsValidFunction(): void
+    public function testIsValidFunction()
     {
         $request = $this->request->create(
             '/',
