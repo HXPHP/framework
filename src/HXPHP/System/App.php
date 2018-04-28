@@ -35,7 +35,7 @@ class App
     {
         $this->configs = $configs;
         $this->router = new Router($configs->baseURI, $configs->global->controllers->directory);
-        $this->response = new Response;
+        $this->response = new Response();
     }
 
     /**
@@ -98,7 +98,6 @@ class App
             $controller = $notFoundController;
         }
 
-        /** @var Controller $app */
         $app = new $controller($this->configs);
 
         //Verifica se a Action requisitada não existe

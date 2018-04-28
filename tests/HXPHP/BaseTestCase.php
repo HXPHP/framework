@@ -4,12 +4,13 @@ namespace Tests;
 
 use HXPHP\System\App;
 use HXPHP\System\Configs\Config;
-use HXPHP\System\Loader;
 use PHPUnit\Framework\TestCase;
 
 abstract class BaseTestCase extends TestCase
 {
     protected $baseURI = 'https://hxphp.dev';
+
+    private $configs;
 
     protected $app;
 
@@ -17,19 +18,21 @@ abstract class BaseTestCase extends TestCase
     {
         parent::__construct();
 
-        $this->createApplication();
+        $this->createConfigs()
+                ->createApplication();
     }
 
-    public function createApplication()
+    private function createConfigs()
     {
-        $configs = new Config();
-        $this->app = new App($configs);
+        $this->configs = new Config();
 
         return $this;
     }
 
-    public function getConfigs() :Config
+    public function createApplication()
     {
-        return $this->app->configs;
+        $this->app = new App($this->configs);
+
+        return $this;
     }
 }

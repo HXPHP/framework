@@ -1,33 +1,36 @@
 <?php
+
 namespace HXPHP\System\Helpers\Menu;
 
-use HXPHP\System\{
-    Http\Request,
-    Configs\Config
-};
+use HXPHP\System\Configs\Config;
+use HXPHP\System\Http\Request;
 
 class Menu
 {
     /**
-     * Dependências
+     * Dependências.
+     *
      * @var object
      */
     private $render = null;
 
     /**
-     * Dados do módulo de configuração
+     * Dados do módulo de configuração.
+     *
      * @var array
      */
     private $configs = [];
 
     /**
-     * URL ATUAL
+     * URL ATUAL.
+     *
      * @var string
      */
     private $current_URL = null;
 
     /**
-     * Nível de acesso
+     * Nível de acesso.
+     *
      * @var string
      */
     private $role;
@@ -53,7 +56,8 @@ class Menu
     }
 
     /**
-     * Dados do módulo de configuração do MenuHelper
+     * Dados do módulo de configuração do MenuHelper.
+     *
      * @param array $configs
      */
     private function setConfigs(Config $configs): self
@@ -64,19 +68,20 @@ class Menu
     }
 
     /**
-     * Define a URL atual
+     * Define a URL atual.
      */
     private function setCurrentURL(Request $request, Config $configs): self
     {
         $parseURL = parse_url($request->server('REQUEST_URI'));
 
-        $this->current_URL = $configs->site->url . $parseURL['path'];
+        $this->current_URL = $configs->site->url.$parseURL['path'];
 
         return $this;
     }
 
     /**
-     * Exibe o HTML com o menu renderizado
+     * Exibe o HTML com o menu renderizado.
+     *
      * @return string
      */
     public function getMenu(): string
@@ -85,7 +90,8 @@ class Menu
     }
 
     /**
-     * Exibe o HTML com o menu renderizado
+     * Exibe o HTML com o menu renderizado.
+     *
      * @return string
      */
     public function __toString(): string
