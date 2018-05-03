@@ -33,7 +33,10 @@
     "autoload": {
         "psr-4": {
             "HXPHP\\": "src/HXPHP"
-        }
+        },
+        "files": [
+            "src/HXPHP/System/Support/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
