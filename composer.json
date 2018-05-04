@@ -11,6 +11,7 @@
         "monolog/monolog": "~1.23",
         "php-activerecord/php-activerecord": "*",
         "symfony/http-foundation": "3.4.*",
+        "symfony/var-dumper": "~4",
         "vlucas/phpdotenv": "~2.4"
     },
     "require-dev": {
