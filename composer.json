@@ -8,6 +8,7 @@
     "require": {
         "php": ">=7.0.0",
         "filp/whoops": "~2.1",
+        "monolog/monolog": "~1.23",
         "php-activerecord/php-activerecord": "*",
         "symfony/http-foundation": "3.4.*",
         "vlucas/phpdotenv": "~2.4"
