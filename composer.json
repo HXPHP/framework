@@ -9,6 +9,7 @@
         "php": ">=7.0.0",
         "filp/whoops": "~2.1",
         "monolog/monolog": "~1.23",
+        "nesbot/carbon": "~1.27",
         "php-activerecord/php-activerecord": "*",
         "symfony/http-foundation": "3.4.*",
         "symfony/var-dumper": "~4",
