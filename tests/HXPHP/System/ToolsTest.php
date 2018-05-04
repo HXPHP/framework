@@ -31,19 +31,11 @@ final class ToolsTest extends BaseTestCase
         );
     }
 
-    public function testFilteredFileNameFunction()
-    {
-        $this->assertEquals(
-            'voce_esta_otimo_&_nos_tambem',
-            Tools::filteredFileName('Você está ótimo & nós também')
-        );
-    }
-
     public function testDecamelizeFunction()
     {
         $this->assertEquals(
-            'carropretoparadonaporta',
-            Tools::filteredFileName('CarroPretoParadoNaPorta', '@')
+            'carro-preto-parado-na-porta',
+            Tools::decamelize('CarroPretoParadoNaPorta')
         );
     }
 }
