@@ -13,6 +13,7 @@
         "php-activerecord/php-activerecord": "*",
         "symfony/http-foundation": "3.4.*",
         "symfony/http-kernel": "~4",
+        "symfony/routing": "~4",
         "symfony/var-dumper": "~4",
         "vlucas/phpdotenv": "~2.4"
     },
