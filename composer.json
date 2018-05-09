@@ -12,7 +12,7 @@
         "nesbot/carbon": "~1.27",
         "php-activerecord/php-activerecord": "*",
         "symfony/http-foundation": "3.4.*",
-        "symfony/http-kernel": "~4",
+        "symfony/http-kernel": "~3",
         "symfony/routing": "~3",
         "symfony/var-dumper": "~4",
         "vlucas/phpdotenv": "~2.4"
