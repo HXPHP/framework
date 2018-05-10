@@ -12,8 +12,6 @@
         "nesbot/carbon": "~1.27",
         "php-activerecord/php-activerecord": "*",
         "symfony/http-foundation": "3.4.*",
-        "symfony/http-kernel": "~3",
-        "symfony/routing": "~3",
         "symfony/var-dumper": "~3",
         "vlucas/phpdotenv": "~2.4"
     },
@@ -34,7 +32,7 @@
     ],
     "support": {
         "issues": "https://github.com/hxphp/framework/issues",
-        "wiki": "https://github.com/hxphp/docs"
+        "wiki": "https://hxphp.github.io/docs/3.0/index.html"
     },
     "autoload": {
         "psr-4": {
