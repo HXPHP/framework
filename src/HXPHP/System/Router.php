@@ -8,60 +8,95 @@ class Router
 
     public $controller = 'IndexController';
 
+    private $baseURI = null;
+    private $controllerDirectory = null;
+
+    private $explode = [];
+
     public $action = 'indexAction';
 
     public $params = [];
 
-    public function __construct(string $baseURI = '', string $controller_directory = '')
+    public function __construct(string $baseURI = '', string $controllerDirectory = '')
     {
         $this->subfolder = 'default';
-        $this->initialize($baseURI, $controller_directory);
+        $this->baseURI = $baseURI;
+        $this->controllerDirectory = $controllerDirectory;
+
+        return $this->initialize();
     }
 
-    public function initialize(string $baseURI, string $controller_directory)
+    public function initialize()
     {
-        if (!empty($baseURI)
-            && !empty($controller_directory) && array_key_exists('REQUEST_URI', $_SERVER)) {
-            $explode = array_values(array_filter(explode('/', $_SERVER['REQUEST_URI'])));
+        if (!$this->baseURI || !$this->controllerDirectory || 
+            false === array_key_exists('REQUEST_URI', $_SERVER)) {
+            return $this;
+        }
+        
+        $this->explode = $this->getExplode();
 
-            $baseURICount = count(array_filter(explode('/', $baseURI)));
+        $baseURICount = count(array_filter(explode('/', $this->baseURI)));
 
-            if (count($explode) == $baseURICount) {
-                return $this;
+        if (count($this->explode) == $baseURICount) {
+            return $this;
+        }
+
+        $this->explode = $this->handleExplode($baseURICount);
+        
+        $this->handle();
+
+        unset($this->explode[0], $this->explode[1]);
+
+        $this->params = array_values($this->explode);
+    }
+
+    private function getExplode()
+    {
+        $rawExplode = explode('/', $_SERVER['REQUEST_URI']);
+        $filteredExplode = array_filter($rawExplode);
+
+        return array_values($filteredExplode);
+    }
+
+    private function handleExplode(int $baseURICount): array
+    {
+        if (count($this->explode) != $baseURICount) {
+            for ($i = 0; $i < $baseURICount; $i++) {
+                unset($this->explode[$i]);
             }
 
-            if (count($explode) != $baseURICount) {
-                for ($i = 0; $i < $baseURICount; $i++) {
-                    unset($explode[$i]);
-                }
+            $this->explode = array_values($this->explode);
+        }
 
-                $explode = array_values($explode);
-            }
+        return $this->explode;
+    }
 
-            if (file_exists($controller_directory.$explode[0])) {
-                $this->subfolder = $explode[0];
+    private function handle()
+    {
+        if (file_exists($this->controllerDirectory.$this->explode[0])) {
+            $this->handleCompleteRoute();
+        } elseif (1 == count($this->explode)) {
+            $this->controller = Tools::filteredName($this->explode[0]).'Controller';
 
-                if (isset($explode[1])) {
-                    $this->controller = Tools::filteredName($explode[1]).'Controller';
-                }
+            return $this;
+        } else {
+            $this->controller = Tools::filteredName($this->explode[0]).'Controller';
+            $this->action = lcfirst(Tools::filteredName($this->explode[1])).'Action';
+        }
+    }
 
-                if (isset($explode[2])) {
-                    $this->action = lcfirst(Tools::filteredName($explode[2])).'Action';
+    private function handleCompleteRoute()
+    {
+        $this->subfolder = $this->explode[0];
 
-                    unset($explode[2]);
-                }
-            } elseif (1 == count($explode)) {
-                $this->controller = Tools::filteredName($explode[0]).'Controller';
+        if (isset($this->explode[1])) {
+            $this->controller = Tools::filteredName($this->explode[1]).'Controller';
+        }
 
-                return $this;
-            } else {
-                $this->controller = Tools::filteredName($explode[0]).'Controller';
-                $this->action = lcfirst(Tools::filteredName($explode[1])).'Action';
-            }
+        if (isset($this->explode[2])) {
+            $this->action = lcfirst(Tools::filteredName($this->explode[2])).'Action';
 
-            unset($explode[0], $explode[1]);
-
-            $this->params = array_values($explode);
+            unset($this->explode[2]);
         }
     }
 }
