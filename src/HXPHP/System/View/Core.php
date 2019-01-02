@@ -2,9 +2,9 @@
 
 namespace HXPHP\System\View;
 
+use HXPHP\System\Configs\Config;
 use HXPHP\System\Http\Request;
 use Symfony\Component\HttpFoundation\Request as SymfonyHttpFoundationRequest;
-use HXPHP\System\Configs\Config;
 
 class Core
 {
@@ -23,7 +23,7 @@ class Core
     private $configs;
 
     /**
-     * Request
+     * Request.
      *
      * @var HXPHP\System\Http\Request
      */
