@@ -2,6 +2,8 @@
 
 namespace HXPHP\System\View;
 
+use HXPHP\System\Http\Request;
+use Symfony\Component\HttpFoundation\Request as SymfonyHttpFoundationRequest;
 use HXPHP\System\Configs\Config;
 
 class Core
@@ -19,6 +21,13 @@ class Core
      * @var object
      */
     private $configs;
+
+    /**
+     * Request
+     *
+     * @var HXPHP\System\Http\Request
+     */
+    public $request;
 
     /**
      * Parâmetros de configuração da VIEW.
@@ -45,6 +54,31 @@ class Core
         'css' => [],
         'js'  => [],
     ];
+
+    public function __construct()
+    {
+        SymfonyHttpFoundationRequest::setFactory(function (
+            array $query = [],
+            array $request = [],
+            array $attributes = [],
+            array $cookies = [],
+            array $files = [],
+            array $server = [],
+            $content = null
+        ) {
+            return new Request(
+                $query,
+                $request,
+                $attributes,
+                $cookies,
+                $files,
+                $server,
+                $content
+            );
+        });
+
+        $this->request = Request::createFromGlobals();
+    }
 
     public function setConfigs(Config $configs, string $subfolder, string $controller, string $action)
     {
