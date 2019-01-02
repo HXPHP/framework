@@ -28,11 +28,11 @@ class Router
 
     public function initialize()
     {
-        if (!$this->baseURI || !$this->controllerDirectory || 
+        if (!$this->baseURI || !$this->controllerDirectory ||
             false === array_key_exists('REQUEST_URI', $_SERVER)) {
             return $this;
         }
-        
+
         $this->explode = $this->getExplode();
 
         $baseURICount = count(array_filter(explode('/', $this->baseURI)));
@@ -42,7 +42,7 @@ class Router
         }
 
         $this->explode = $this->handleExplode($baseURICount);
-        
+
         $this->handle();
 
         unset($this->explode[0], $this->explode[1]);
